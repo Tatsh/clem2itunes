@@ -109,11 +109,9 @@ for line in ObjC.unwrap(ratingsFileData).split '\n'
     if not line
         continue
 
-    spl = line.split ' '
-    filename = spl[1].trim()
-    rating = parseInt spl[0], 10
-    rating /= 5
-    rating *= 100
+    [rating, filename] = line.split ' '
+    filename = filename.trim()
+    rating = (parseInt(rating, 10) / 5) * 100
 
     if filename not of ratings
         throw new FileNotFoundError filename
