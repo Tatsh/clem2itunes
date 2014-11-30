@@ -1,4 +1,3 @@
-ObjC.import 'stdio'
 ObjC.import 'AppKit'
 ObjC.import 'Foundation'
 
@@ -25,6 +24,9 @@ class iTunes
     constructor: ->
         Object.defineProperty this, 'itunes', {
             get: =>
+                if @_itunes
+                    return @_itunes
+
                 if not @running()
                     $.NSWorkspace.sharedWorkspace.launchAppWithBundleIdentifierOptionsAdditionalEventParamDescriptorLaunchIdentifier(
                         'com.apple.iTunes',
@@ -32,8 +34,9 @@ class iTunes
                         $.NSAppleEventDescriptor.nullDescriptor,
                         null,
                     )
+                    @_itunes = Application('iTunes')
 
-                return Application('iTunes')
+                return @_itunes
         }
         Object.defineProperty this, 'library', {
             get: =>
@@ -59,13 +62,13 @@ class iTunes
             try
                 loc = track.location()
             catch
-                $.printf "Removing #{ name }"
+                console.log "Removing #{ name }"
                 ret.push track
                 track.delete()
                 continue
 
             if not loc or not @finder.exists loc
-                $.printf "Removing #{ name }"
+                console.log "Removing #{ name }"
                 ret.push track
                 track.delete()
 
