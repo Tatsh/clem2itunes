@@ -1,5 +1,6 @@
 ObjC.import 'stdio'
 ObjC.import 'AppKit'
+ObjC.import 'Foundation'
 
 
 class iTunesNotRunningError extends Error
@@ -22,7 +23,12 @@ class iTunes
         Object.defineProperty this, 'itunes', {
             get: =>
                 if not @running()
-                    throw new iTunesNotRunningError('iTunes not found to be running')
+                    $.NSWorkspace.sharedWorkspace.launchAppWithBundleIdentifierOptionsAdditionalEventParamDescriptorLaunchIdentifier(
+                        'com.apple.iTunes',
+                        $.NSWorkspaceLaunchAsync | $.NSWorkspaceLaunchAndHide,
+                        $.NSAppleEventDescriptor.nullDescriptor,
+                        null,
+                    )
 
                 return Application('iTunes')
         }
@@ -43,7 +49,7 @@ class iTunes
                 @itunes.currentTrack
         }
 
-    clearOrphanedTracks: ->
+    deleteOrphanedTracks: ->
         ret = []
         for track in @library.tracks()
             name = track.name()
@@ -73,4 +79,26 @@ class iTunes
 
 
 it = new iTunes()
-it.itunes
+
+pipe = $.NSPipe.pipe
+file = pipe.fileHandleForReading
+task = $.NSTask.alloc.init
+
+task.launchPath = '/opt/local/bin/rsync'
+task.arguments = [
+    '--force',
+    '--delete-before',
+    '-rtdLc',
+    '-q',
+    'tat.sh:/mnt/tatsh/temp/import/',
+    it.finder.home().url().replace(/^file\:\/\//, '').replace(/\/$/, '') + '/Music/import',
+]
+task.standardOutput = pipe
+
+task.launch
+
+it.deleteOrphanedTracks()
+dir = it.finder.home().folders.byName('Music').folders.byName('import')
+it.addTracksAtPath dir
+
+# Update ratings
