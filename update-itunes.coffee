@@ -80,6 +80,22 @@ class iTunes
         for track in @library.tracks()
             @itunes.refresh(track)
 
+console.log 'Running generator on tat.sh'
+
+pipe = $.NSPipe.pipe
+file = pipe.fileHandleForReading
+task = $.NSTask.alloc.init
+
+task.launchPath = '/usr/bin/ssh'
+task.arguments = [
+    'tatsh@tat.sh',
+    "'/home/tatsh/.virtualenvs/clem2itunes/bin/python /home/tatsh/dev/clem2itunes/clem2itunes-create-lib -m 32 --split-dir /mnt/tatsh4t-2/splitcue-cache/ /home/tatsh/temp/import'",
+]
+task.standardOutput = pipe
+
+task.launch
+task.waitUntilExit
+
 FROM_HOST = 'tat.sh'
 REMOTE_DIR = '/mnt/tatsh/temp/import/'
 LOCAL_DIR = Application('Finder').home().url().replace(/^file\:\/\//, '').replace(/\/$/, '') + '/Music/import'
@@ -88,8 +104,7 @@ LOCAL_DIR = Application('Finder').home().url().replace(/^file\:\/\//, '').replac
 it = new iTunes()
 
 console.log 'Syncing with tat.sh'
-pipe = $.NSPipe.pipe
-file = pipe.fileHandleForReading
+
 task = $.NSTask.alloc.init
 
 task.launchPath = '/opt/local/bin/rsync'
