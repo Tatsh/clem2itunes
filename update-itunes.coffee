@@ -80,36 +80,13 @@ class iTunes
         for track in @library.tracks()
             @itunes.refresh(track)
 
-FROM_HOST = 'tat.sh'
-REMOTE_DIR = '/mnt/tatsh/temp/import/'
-LOCAL_DIR = Application('Finder').home().url().replace(/^file\:\/\//, '').replace(/\/$/, '') + '/Music/import'
-
 
 it = new iTunes()
-
-console.log 'Syncing with tat.sh'
-pipe = $.NSPipe.pipe
-file = pipe.fileHandleForReading
-task = $.NSTask.alloc.init
-
-task.launchPath = '/opt/local/bin/rsync'
-task.arguments = [
-    '--force',
-    '--delete-before',
-    '-rtdLq',
-    '-c',
-    "#{ FROM_HOST }:#{ REMOTE_DIR }",
-    LOCAL_DIR,
-]
-task.standardOutput = pipe
-
-task.launch
-task.waitUntilExit
+dir = it.finder.home().folders.byName('Music').folders.byName('import')
 
 console.log 'Deleting orphaned tracks'
 deleted = it.deleteOrphanedTracks()
 
-dir = it.finder.home().folders.byName('Music').folders.byName('import')
 console.log 'Updating iTunes track list'
 it.addTracksAtPath dir
 
