@@ -3,6 +3,9 @@ ObjC.import 'AppKit'
 ObjC.import 'Foundation'
 
 
+class FileNotFoundError extends Error
+
+
 class iTunesNotRunningError extends Error
 
 
@@ -77,9 +80,14 @@ class iTunes
         for track in @library.tracks()
             @itunes.refresh(track)
 
+FROM_HOST = 'tat.sh'
+REMOTE_DIR = '/mnt/tatsh/temp/import/'
+LOCAL_DIR = Application('Finder').home().url().replace(/^file\:\/\//, '').replace(/\/$/, '') + '/Music/import'
+
 
 it = new iTunes()
 
+console.log 'Syncing with tat.sh'
 pipe = $.NSPipe.pipe
 file = pipe.fileHandleForReading
 task = $.NSTask.alloc.init
@@ -88,17 +96,49 @@ task.launchPath = '/opt/local/bin/rsync'
 task.arguments = [
     '--force',
     '--delete-before',
-    '-rtdLc',
-    '-q',
-    'tat.sh:/mnt/tatsh/temp/import/',
-    it.finder.home().url().replace(/^file\:\/\//, '').replace(/\/$/, '') + '/Music/import',
+    '-rtdLq',
+    '-c',
+    "#{ FROM_HOST }:#{ REMOTE_DIR }",
+    LOCAL_DIR,
 ]
 task.standardOutput = pipe
 
 task.launch
+task.waitUntilExit
 
-it.deleteOrphanedTracks()
+console.log 'Deleting orphaned tracks'
+deleted = it.deleteOrphanedTracks()
+
 dir = it.finder.home().folders.byName('Music').folders.byName('import')
+console.log 'Updating iTunes track list'
 it.addTracksAtPath dir
 
 # Update ratings
+# Have to use .items for 'hidden' files
+filePath = dir.items.byName('.ratings').url().replace(/^file\:\/\//, '')
+ratingsFileData = $.NSString.stringWithContentsOfFileUsedEncodingError(filePath, $.NSUTF8StringEncoding, null)
+ratings = {}
+
+console.log 'Building basename:track hash'
+for track in it.library.tracks()
+    loc = track.location().toString()
+    loc = ObjC.unwrap($.NSString.stringWithString(loc).lastPathComponent)
+    ratings[loc] = track
+
+console.log 'Setting ratings'
+for line in ObjC.unwrap(ratingsFileData).split '\n'
+    line = line.trim()
+
+    if not line
+        continue
+
+    spl = line.split ' '
+    filename = spl[1].trim()
+    rating = parseInt spl[0], 10
+    rating /= 5
+    rating *= 100
+
+    if filename not of ratings
+        throw new FileNotFoundError filename
+
+    ratings[filename]().rating = rating
