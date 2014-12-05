@@ -34,7 +34,7 @@ class iTunes
                         $.NSAppleEventDescriptor.nullDescriptor,
                         null,
                     )
-                    @_itunes = Application('iTunes')
+                @_itunes = Application('iTunes')
 
                 return @_itunes
         }
@@ -52,7 +52,10 @@ class iTunes
         }
         Object.defineProperty this, 'currentTrack', {
             get: =>
-                @itunes.currentTrack
+                try
+                    return @itunes.currentTrack
+                catch
+                    null
         }
 
     deleteOrphanedTracks: ->
