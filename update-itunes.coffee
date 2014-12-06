@@ -34,7 +34,14 @@ class iTunes
                         $.NSAppleEventDescriptor.nullDescriptor,
                         null,
                     )
+                    delay 3
+
                 @_itunes = Application('iTunes')
+                se = Application('System Events')
+                proc = se.processes.byName 'iTunes'
+                @_devicesMenuItems = proc.menuBars[0].menuBarItems.byName 'File'
+                                         .menus[0].menuItems.byName 'Devices'
+                                         .menus[0].menuItems()
 
                 return @_itunes
         }
@@ -86,6 +93,15 @@ class iTunes
         for track in @library.tracks()
             @itunes.refresh(track)
 
+    _clickDevicesMenuItem: (regex) ->
+        @itunes.activate()
+        for item in @_devicesMenuItems
+            if regex.test(item.title()) and item.enabled()
+                item.click()
+
+    syncDevice: ->
+        @_clickDevicesMenuItem /^Sync /
+
 
 it = new iTunes()
 dir = it.finder.home().folders.byName('Music').folders.byName('import')
@@ -123,3 +139,6 @@ for line in ObjC.unwrap(ratingsFileData).split '\n'
         throw new FileNotFoundError filename
 
     ratings[filename]().rating = rating
+
+console.log 'Syncing device if present'
+it.syncDevice()
