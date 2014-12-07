@@ -1,5 +1,6 @@
 ObjC.import 'AppKit'
 ObjC.import 'Foundation'
+ObjC.import 'stdlib'
 
 
 class FileNotFoundError extends Error
@@ -142,3 +143,5 @@ for line in ObjC.unwrap(ratingsFileData).split '\n'
 
 console.log 'Syncing device if present'
 it.syncDevice()
+
+$.exit 0
