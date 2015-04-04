@@ -15,7 +15,7 @@ class iTunes
 
     running: ->
         for app in ObjC.unwrap($.NSWorkspace.sharedWorkspace.runningApplications)
-            if typeof app.bundleIdentifier.isEqualToString == 'undefined'
+            if typeof app.bundleIdentifier.isEqualToString is 'undefined'
                 continue
             if app.bundleIdentifier.isEqualToString 'com.apple.iTunes'
                 return true
@@ -52,7 +52,7 @@ class iTunes
                     return @_library
 
                 for source in @itunes['sources']()
-                    if source.name() == 'Library'
+                    if source.name() is 'Library'
                         @_library = source
                         break
 
@@ -142,6 +142,9 @@ for line in ObjC.unwrap(ratingsFileData).split '\n'
     ratings[filename]().rating = rating
 
 console.log 'Syncing device if present'
-it.syncDevice()
+try
+    it.syncDevice()
+catch
+    # Nothing
 
 $.exit 0
