@@ -29,10 +29,13 @@ from sh import (
 import sh
 
 CLEMENTINE_DB_LINUX = '%s/.config/Clementine/clementine.db' % (env['HOME'],)
-
 FILE_URI_REGEX = re.compile(r'^file\://')
 
 _log = logging.getLogger('itunes-lib-maker')
+
+
+class CandidateError(Exception):
+    pass
 
 
 class WritableDirectoryAction(argparse.Action):
@@ -90,7 +93,7 @@ def splitcue(temp_dir, cuefile, mp3file, track):
     with open(candidate, 'rb'):
         return candidate
 
-    raise Exception('Candidate file should have been returned')
+    raise CandidateError('Candidate file should have been returned')
 
 
 if __name__ == '__main__':
