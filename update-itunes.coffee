@@ -68,7 +68,7 @@ class iTunes
 
     deleteOrphanedTracks: ->
         ret = []
-        for track in @library.tracks()
+        for track in @_library.tracks()
             name = track.name()
             try
                 loc = track.location()
@@ -92,7 +92,7 @@ class iTunes
         @itunes.add paths, {to: @library}
         # Refresh all tracks in case some changes do not get detected
         for track in @library.tracks()
-            @itunes.refresh(track)
+            @itunes.refresh track
 
     _clickDevicesMenuItem: (regex) ->
         @itunes.activate()
