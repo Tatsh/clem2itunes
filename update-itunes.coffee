@@ -103,6 +103,12 @@ class iTunes
     syncDevice: ->
         @_clickDevicesMenuItem /^Sync /
 
+    backupDevice: ->
+        @_clickDevicesMenuItem /^Back Up$/
+
+    transferPurchasesFromDevice: ->
+        @_clickDevicesMenuItem /^Transfer Purchases from /
+
 
 it = new iTunes()
 dir = it.finder.home().folders.byName('Music').folders.byName('import')
