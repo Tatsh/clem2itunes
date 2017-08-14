@@ -9,14 +9,17 @@ REMOTE_PYTHON="${REMOTE_PYTHON:-/home/${USER}/.virtualenvs/clem2itunes/bin/pytho
 REMOTE_CREATE_LIB="${REMOTE_CREATE_LIB:-/home/${USER}/dev/clem2itunes/clem2itunes-create-lib}"
 REMOTE_SPLITCUE_CACHE_DIR="${REMOTE_SPLITCUE_CACHE_DIR:-/home/${USER}/.splitcue-cache/}"
 SIZE_LIMIT_IN_GB="${SIZE_LIMIT_IN_GB:-32}"
+THRESHOLD="${THRESHOLD:-0.8}"
 
 # shellcheck disable=SC2029
 ssh "${FROM_USER}@${FROM_HOST}" \
     "${REMOTE_PYTHON} \
-     ${REMOTE_CREATE_LIB} \
-        -m ${SIZE_LIMIT_IN_GB} \
-        --split-dir \
-        ${REMOTE_SPLITCUE_CACHE_DIR} \
+     "${REMOTE_CREATE_LIB}" \
+        -m "${SIZE_LIMIT_IN_GB}" \
+        -t "${THRESHOLD}" \
+        --split-dir "${REMOTE_SPLITCUE_CACHE_DIR}" \
         ${REMOTE_DIR}"
 rsync --force --delete-before -rtdLqc "${FROM_USER}@${FROM_HOST}:${REMOTE_DIR}/" "$LOCAL_DIR"
-coffee -p update-itunes.coffee | osascript -l JavaScript
+rm -f update-itunes.js
+coffee -bc update-itunes.coffee
+babel update-itunes.js | osascript -l JavaScript
