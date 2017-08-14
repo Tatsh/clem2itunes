@@ -68,7 +68,7 @@ class iTunes
 
     deleteOrphanedTracks: ->
         ret = []
-        for track in @_library.tracks()
+        for track in @library.tracks()
             name = track.name()
             try
                 loc = track.location()

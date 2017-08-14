@@ -30,3 +30,8 @@ id3ted/
 .Trashes/
 ehthumbs.db
 Thumbs.db
+
+node_modules/
+.babelrc
+package*.json
+update-itunes.js
