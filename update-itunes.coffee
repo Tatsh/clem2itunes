@@ -18,13 +18,14 @@ class iTunes
 
     running: ->
         apps = ObjC.unwrap($.NSWorkspace.sharedWorkspace.runningApplications)
+        ret = false
         for app in apps
             if typeof app.bundleIdentifier.isEqualToString is 'undefined'
                 continue
             if app.bundleIdentifier.isEqualToString 'com.apple.iTunes'
-                return true
-
-        return false
+                ret = true
+                break
+        ret
 
     constructor: ->
         Object.defineProperty this, 'itunes', {
@@ -49,7 +50,7 @@ class iTunes
                                          .menus[0].menuItems.byName 'Devices'
                                          .menus[0].menuItems()
 
-                return @_itunes
+                @_itunes
         }
         Object.defineProperty this, 'library', {
             get: =>
@@ -66,7 +67,7 @@ class iTunes
         Object.defineProperty this, 'currentTrack', {
             get: =>
                 try
-                    return @itunes.currentTrack
+                    @itunes.currentTrack
                 catch
                     null
         }
