@@ -17,7 +17,8 @@ class iTunes
     _library: null
 
     running: ->
-        for app in ObjC.unwrap($.NSWorkspace.sharedWorkspace.runningApplications)
+        apps = ObjC.unwrap($.NSWorkspace.sharedWorkspace.runningApplications)
+        for app in apps
             if typeof app.bundleIdentifier.isEqualToString is 'undefined'
                 continue
             if app.bundleIdentifier.isEqualToString 'com.apple.iTunes'
