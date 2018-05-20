@@ -21,5 +21,4 @@ ssh "${FROM_USER}@${FROM_HOST}" \
         ${REMOTE_DIR}"
 rsync --force --delete-before -rtdLqc "${FROM_USER}@${FROM_HOST}:${REMOTE_DIR}/" "$LOCAL_DIR"
 rm -f update-itunes.js
-coffee -bc update-itunes.coffee
-babel update-itunes.js | osascript -l JavaScript
+coffee -bcs update-itunes.coffee | osascript -l JavaScript
