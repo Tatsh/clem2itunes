@@ -2,6 +2,9 @@ ObjC.import 'AppKit'
 ObjC.import 'Foundation'
 ObjC.import 'stdlib'
 
+const lawbio = 'launchAppWithBundleIdentifierOptionsAdditionalEventParam' +
+               'DescriptorLaunchIdentifier';
+
 
 class FileNotFoundError extends Error
 
@@ -14,7 +17,8 @@ class iTunes
     _library: null
 
     running: ->
-        for app in ObjC.unwrap($.NSWorkspace.sharedWorkspace.runningApplications)
+        apps = ObjC.unwrap($.NSWorkspace.sharedWorkspace.runningApplications)
+        for app in apps
             if typeof app.bundleIdentifier.isEqualToString is 'undefined'
                 continue
             if app.bundleIdentifier.isEqualToString 'com.apple.iTunes'
@@ -29,7 +33,7 @@ class iTunes
                     return @_itunes
 
                 if not @running()
-                    $.NSWorkspace.sharedWorkspace.launchAppWithBundleIdentifierOptionsAdditionalEventParamDescriptorLaunchIdentifier(
+                    $.NSWorkspace.sharedWorkspace[lawbio](
                         'com.apple.iTunes',
                         $.NSWorkspaceLaunchAsync | $.NSWorkspaceLaunchAndHide,
                         $.NSAppleEventDescriptor.nullDescriptor,
@@ -40,7 +44,8 @@ class iTunes
                 @_itunes = Application('iTunes')
                 se = Application('System Events')
                 proc = se.processes.byName 'iTunes'
-                @_devicesMenuItems = proc.menuBars[0].menuBarItems.byName 'File'
+                @_devicesMenuItems = proc.menuBars[0]
+                                         .menuBarItems.byName 'File'
                                          .menus[0].menuItems.byName 'Devices'
                                          .menus[0].menuItems()
 
@@ -88,7 +93,8 @@ class iTunes
     # root must be a Finder folder item
     # finder.home().folders.byName('Music').folders.byName('import');
     addTracksAtPath: (root) ->
-        paths = (Path(x.url().replace(/^file\:\/\//, '')) for x in root.entireContents())
+        paths = root.entireContents().map(
+            () -> Path(x.url().replace(/^file\:\/\//, '')))
         @itunes.add paths, {to: @library}
         # Refresh all tracks in case some changes do not get detected
         for track in @library.tracks()
@@ -108,3 +114,9 @@ class iTunes
 
     transferPurchasesFromDevice: ->
         @_clickDevicesMenuItem /^Transfer Purchases from /
+
+module.exports = {
+    iTunes: iTunes,
+    iTunesNotRunningError: iTunesNotRunningError,
+    FileNotFoundError: FileNotFoundError,
+}
