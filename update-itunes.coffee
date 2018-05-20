@@ -2,8 +2,8 @@ ObjC.import 'AppKit'
 ObjC.import 'Foundation'
 ObjC.import 'stdlib'
 
-lawbio = 'launchAppWithBundleIdentifierOptionsAdditionalEventParam' +
-         'DescriptorLaunchIdentifier'
+lawbio = "launchAppWithBundleIdentifierOptionsAdditionalEventParam\
+          DescriptorLaunchIdentifier"
 
 
 class FileNotFoundError extends Error
