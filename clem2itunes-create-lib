@@ -57,9 +57,10 @@ class WritableDirectoryAction(argparse.Action):
             ))
 
         if not os.access(prospective_dir, os.W_OK):
-            raise argparse.ArgumentTypeError('%s is not a readable directory' % (
-                prospective_dir,
-            ))
+            raise argparse.ArgumentTypeError(
+                '%s is not a readable directory' % (
+                    prospective_dir,
+                ))
 
     def __call__(self, parser, namespace, values, option_string=None):
         dirs = values
@@ -111,11 +112,13 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-t', '--threshold', type=float, default=0.6)
-    parser.add_argument('-m', '--max-size', type=int, help='Maximum size in GB', default=32)
+    parser.add_argument('-m', '--max-size', type=int,
+                        help='Maximum size in GB', default=32)
     parser.add_argument('-v', '--verbose', action='store_true')
     parser.add_argument('-d', '--debug', action='store_true')
     parser.add_argument('--include-no-cover', action='store_true')
-    parser.add_argument('--split-dir', action=WritableDirectoryAction, required=False)
+    parser.add_argument('--split-dir', action=WritableDirectoryAction,
+                        required=False)
     parser.add_argument('directory', nargs=1, action=WritableDirectoryAction)
 
     args = parser.parse_args()
@@ -123,7 +126,8 @@ if __name__ == '__main__':
     outdir = args.directory[0]
 
     if outdir == args.split_dir:
-        print('Split CUE cache directory cannot be same as output directory', file=sys.stderr)
+        print('Split CUE cache directory cannot be same as output directory',
+              file=sys.stderr)
         sys.exit(1)
 
     if args.verbose or args.debug:
@@ -182,7 +186,8 @@ if __name__ == '__main__':
             with open(filename, 'rb') as f:
                 pass
         except IOError:
-            _log.error('Bad data in database. File not found or is not readable: %s' % (filename,))
+            _log.error('Bad data in database. File not found or is not '
+                       'readable: %s' % (filename,))
             continue
 
         try:
@@ -192,9 +197,12 @@ if __name__ == '__main__':
                 if not isdir(tempdir):
                     mkdir(tempdir)
 
-                _log.info('Splitting track #%d (%s - \'%s\') out of %s (tempdir = %s)' % (track, artist, title, basename(filename), tempdir))
+                _log.info('Splitting track #%d (%s - \'%s\') out of %s '
+                          '(tempdir = %s)' % (track, artist, title,
+                                              basename(filename), tempdir))
 
-                # Only the filename variable has to change and the below code works
+                # Only the filename variable has to change and the below code
+                # works
                 filename = splitcue(tempdir, f.name, filename, track)
         except IOError:
             pass
@@ -213,15 +221,18 @@ if __name__ == '__main__':
         try:
             data = data.stdout.decode('utf-8')
         except UnicodeDecodeError as e:
-            _log.error('Data from tool for file %s failed to decode to UTF-8. Not including' % (filename,))
+            _log.error('Data from tool for file %s failed to decode to UTF-8. '
+                       'Not including' % (filename,))
             _log.error(e.object)
-            _log.error('Start: %d, End: %d, Reason: %s', e.start, e.end, e.reason)
+            _log.error('Start: %d, End: %d, Reason: %s', e.start, e.end,
+                       e.reason)
             continue
 
         # Cover check
         if filename.endswith('.mp3') and 'APIC: image/jpeg' not in data:
             cover_found = False
-        elif filename.endswith('.m4a') and 'Atom "covr" contains: ' not in data:
+        elif (filename.endswith('.m4a') and
+                'Atom "covr" contains: ' not in data):
             cover_found = False
         if not cover_found and not args.include_no_cover:
             no_cover.append(filename)
@@ -237,10 +248,14 @@ if __name__ == '__main__':
                     pass
                 else:
                     stream_failures.append(filename)
-                    _log.error('Stream check failed for %s. Not including' % (filename,))
+                    _log.error(
+                        'Stream check failed for %s. Not including' % (
+                            filename,))
                     continue
         else:
-            _log.debug('Stream checking for M4A not implemented yet (file: %s)' % (filename,))
+            _log.debug(
+                'Stream checking for M4A not implemented yet (file: %s)' % (
+                    filename,))
 
         if total_size + filesize > max_size:
             _log.info('Hit limit for maximum total size of data')
@@ -260,7 +275,8 @@ if __name__ == '__main__':
 
     conn.close()
 
-    _log.info('%.2f GB (%.2f GiB) of data found' % (total_size / (1000 ** 3), total_size / (1024 ** 3),),)
+    _log.info('%.2f GB (%.2f GiB) of data found' %
+              (total_size / (1000 ** 3), total_size / (1024 ** 3),),)
     for fn in files:
         out = path_join(outdir, basename(fn))
         _log.info('%s -> %s' % (fn, out,))
@@ -278,4 +294,5 @@ if __name__ == '__main__':
             f.write('%s %s\n' % (rating, filename,))
 
     if args.verbose:
-        print('%s' % ('\n'.join(difflib.Differ().compare(sorted(old_listing), sorted(new_listing))),))
+        print('%s' % ('\n'.join(difflib.Differ().compare(
+            sorted(old_listing), sorted(new_listing))),))
