@@ -19,6 +19,7 @@ ssh "${FROM_USER}@${FROM_HOST}" \
         -t "${THRESHOLD}" \
         --split-dir "${REMOTE_SPLITCUE_CACHE_DIR}" \
         ${REMOTE_DIR}"
-rsync --force --delete-before -rtdLqc "${FROM_USER}@${FROM_HOST}:${REMOTE_DIR}/" "$LOCAL_DIR"
+rsync --force --delete-before -rtdLqc \
+    "${FROM_USER}@${FROM_HOST}:${REMOTE_DIR}/" "$LOCAL_DIR"
 rm -f update-itunes.js
 coffee -bcs update-itunes.coffee | osascript -l JavaScript
