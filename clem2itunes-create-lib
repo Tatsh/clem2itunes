@@ -1,17 +1,8 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 from os import listdir, mkdir, remove as rm, stat, symlink
-from os.path import (
-    basename,
-    dirname,
-    expanduser,
-    isdir,
-    islink,
-    join as path_join,
-    realpath,
-    splitext,
-)
+from os.path import (basename, dirname, expanduser, isdir, join as
+                     path_join, realpath, splitext)
 from sqlite3 import connect as sqlite_connect
-from tempfile import mkdtemp
 import argparse
 import datetime
 import difflib
@@ -19,27 +10,36 @@ import logging
 import math
 import os
 import re
+import subprocess as sp
 import sys
-
-from sh import (
-    AtomicParsley as atomic,
-    id3ted,
-    mp3check,
-    mp3splt,
-)
-import sh
+from typing import Any, Sequence
 
 FILE_URI_REGEX = re.compile(r'^file\://')
 _log = logging.getLogger('itunes-lib-maker')
 
 
+def _run(name: str):
+    def z(args: Sequence[str]):
+        return sp.run((name,) + tuple(args), text=True, check=True, stdout=sp.PIPE)
+    return z
+
+
+atomic = _run('AtomicParsley')
+id3ted = _run('id3ted')
+mp3check = _run('mp3check')
+mp3splt = _run('mp3splt')
+
+
 def get_clementine_db_file_path():
-    paths = (expanduser('~/.config/Clementine-qt5/clementine.db'),
-             expanduser('~/.config/Clementine/clementine.db'),)
+    paths = (
+        expanduser('~/.local/share/strawberry/strawberry/strawberry.db'),
+        expanduser('~/.config/Clementine-qt5/clementine.db'),
+        expanduser('~/.config/Clementine/clementine.db'),
+    )
     for path in paths:
         try:
             with open(path, 'rb'):
-                return path
+                return path, path.endswith('clementine.db')
         except IOError:
             pass
     raise Exception('No Clementine database found')
@@ -50,20 +50,17 @@ class CandidateError(Exception):
 
 
 class WritableDirectoryAction(argparse.Action):
-    def _raise_if_invalid(self, prospective_dir):
+
+    def _raise_if_invalid(self, prospective_dir: str):
         if not isdir(prospective_dir):
-            raise argparse.ArgumentTypeError('%s is not a valid directory' % (
-                prospective_dir,
-            ))
+            raise argparse.ArgumentTypeError('%s is not a valid directory' %
+                                             (prospective_dir, ))
 
         if not os.access(prospective_dir, os.W_OK):
-            raise argparse.ArgumentTypeError(
-                '%s is not a readable directory' % (
-                    prospective_dir,
-                ))
+            raise argparse.ArgumentTypeError('%s is not a readable directory' %
+                                             (prospective_dir, ))
 
-    def __call__(self, parser, namespace, values, option_string=None):
-        dirs = values
+    def __call__(self, _: argparse.ArgumentParser, namespace: argparse.Namespace, values: Any, __: str | None=None):
         was_list = True
         new_list = []
 
@@ -82,10 +79,13 @@ class WritableDirectoryAction(argparse.Action):
         setattr(namespace, self.dest, new_list)
 
 
-def splitcue(temp_dir, cuefile, mp3file, track):
+def splitcue(temp_dir: str, cuefile: str, mp3file: str, track: str):
     bnmp3 = basename(mp3file)
     mp3root, _ = splitext(bnmp3)
-    candidate = path_join(temp_dir, '%s-%02d.mp3' % (mp3root, track,))
+    candidate = path_join(temp_dir, '%s-%02d.mp3' % (
+        mp3root,
+        track,
+    ))
 
     try:
         with open(candidate, 'rb'):
@@ -95,12 +95,14 @@ def splitcue(temp_dir, cuefile, mp3file, track):
         _log.debug('Candidate split MP3 does not exist')
         pass
 
-    mp3splt_args = ['-xKf', '-C', '8', '-T', '12', '-o' '%s-@n' % (mp3root,)]
+    mp3splt_args = ['-xKf', '-C', '8', '-T', '12',
+                    '-o'
+                    '%s-@n' % (mp3root, )]
     mp3splt_args += ['-d', temp_dir, '-c', cuefile, mp3file]
 
-    _log.debug('mp3splt %s' % (' '.join(mp3splt_args),))
+    _log.debug('mp3splt %s' % (' '.join(mp3splt_args), ))
     out = mp3splt(mp3splt_args)
-    _log.debug(out.strip())
+    _log.debug(out.stdout.strip())
 
     with open(candidate, 'rb'):
         return candidate
@@ -112,12 +114,16 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-t', '--threshold', type=float, default=0.6)
-    parser.add_argument('-m', '--max-size', type=int,
-                        help='Maximum size in GB', default=32)
+    parser.add_argument('-m',
+                        '--max-size',
+                        type=int,
+                        help='Maximum size in GB',
+                        default=32)
     parser.add_argument('-v', '--verbose', action='store_true')
     parser.add_argument('-d', '--debug', action='store_true')
     parser.add_argument('--include-no-cover', action='store_true')
-    parser.add_argument('--split-dir', action=WritableDirectoryAction,
+    parser.add_argument('--split-dir',
+                        action=WritableDirectoryAction,
                         required=False)
     parser.add_argument('directory', nargs=1, action=WritableDirectoryAction)
 
@@ -154,32 +160,37 @@ if __name__ == '__main__':
         rm(fn)
 
     # TODO Detect OS and switch, blah
-    db_file = get_clementine_db_file_path()
+    db_file, is_clementine = get_clementine_db_file_path()
 
     files = []
     no_cover = []
     stream_failures = []
     ratings = []
     total_size = 0
-    max_size = args.max_size * (1000 ** 3)  # Use SI as iOS/OS X does
+    max_size = args.max_size * (1000**3)  # Use SI as iOS/OS X does
     uniques = []
     splitdir = realpath(args.split_dir)
 
+    _log.debug('db_file: %s', db_file)
     conn = sqlite_connect(db_file)
     c = conn.cursor()
-    c.execute('SELECT rating, artist, title, filename, track FROM songs '
-              'WHERE rating >= ? AND '
-              '(filename LIKE "%.mp3" OR filename LIKE "%.m4a") '
-              'ORDER BY rating ASC',
-              (threshold,))
+    filename_column = 'filename' if is_clementine else 'url AS filename'
+    like_column = 'filename' if is_clementine else 'url'
+    c.execute(
+        f'SELECT rating, artist, title, {filename_column}, track FROM songs '
+        'WHERE rating >= ? AND '
+        f'({like_column} LIKE "%.mp3" OR {like_column} LIKE "%.m4a") '
+        'ORDER BY rating ASC', (threshold, ))
 
     for rating, artist, title, filename, track in c.fetchall():
-        filename = filename.decode('utf-8')
         filename = re.sub(FILE_URI_REGEX, '', filename)
 
         if filename in files:
             continue
-        if (artist.lower(), title.lower(),) in uniques:
+        if (
+                artist.lower(),
+                title.lower(),
+        ) in uniques:
             continue
 
         try:
@@ -187,7 +198,7 @@ if __name__ == '__main__':
                 pass
         except IOError:
             _log.error('Bad data in database. File not found or is not '
-                       'readable: %s' % (filename,))
+                       'readable: %s' % (filename, ))
             continue
 
         try:
@@ -198,13 +209,13 @@ if __name__ == '__main__':
                     mkdir(tempdir)
 
                 _log.info('Splitting track #%d (%s - \'%s\') out of %s '
-                          '(tempdir = %s)' % (track, artist, title,
-                                              basename(filename), tempdir))
+                          '(tempdir = %s)' %
+                          (track, artist, title, basename(filename), tempdir))
 
                 # Only the filename variable has to change and the below code
                 # works
                 filename = splitcue(tempdir, f.name, filename, track)
-        except IOError:
+        except (IOError, sp.CalledProcessError):
             pass
 
         filesize = stat(filename).st_size
@@ -212,17 +223,25 @@ if __name__ == '__main__':
 
         with open(filename, 'rb') as f:
             if filename.endswith('.mp3'):
-                data = id3ted(['-l', filename])
+                try:
+                    data = id3ted(['-l', filename])
+                except UnicodeDecodeError as e:
+                    _log.error('Data from tool for file %s failed to decode to UTF-8. '
+                       'Not including' % (filename, ))
+                    _log.error(e.object)
+                    _log.error('Start: %d, End: %d, Reason: %s', e.start, e.end,
+                       e.reason)
+                    continue
             elif filename.endswith('.m4a'):
                 data = atomic([filename, '-t'])
             else:
                 raise NotImplementedError(filename)
 
         try:
-            data = data.stdout.decode('utf-8')
+            data = data.stdout
         except UnicodeDecodeError as e:
             _log.error('Data from tool for file %s failed to decode to UTF-8. '
-                       'Not including' % (filename,))
+                       'Not including' % (filename, ))
             _log.error(e.object)
             _log.error('Start: %d, End: %d, Reason: %s', e.start, e.end,
                        e.reason)
@@ -231,31 +250,30 @@ if __name__ == '__main__':
         # Cover check
         if filename.endswith('.mp3') and 'APIC: image/jpeg' not in data:
             cover_found = False
-        elif (filename.endswith('.m4a') and
-                'Atom "covr" contains: ' not in data):
+        elif (filename.endswith('.m4a')
+              and 'Atom "covr" contains: ' not in data):
             cover_found = False
         if not cover_found and not args.include_no_cover:
             no_cover.append(filename)
-            _log.warn('Cover check failed for %s. Skipping' % (filename,))
+            _log.warn('Cover check failed for %s. Skipping' % (filename, ))
             continue
 
         # Stream check, -TY may make this useless?
         if filename.endswith('.mp3'):
             try:
                 mp3check(['-e', '-GSBTY', filename])
-            except sh.ErrorReturnCode_1 as e:
-                if b'bytes of junk after last frame' in e.stdout:
+            except sp.CalledProcessError as e:
+                if 'bytes of junk after last frame' in e.stdout:
                     pass
                 else:
                     stream_failures.append(filename)
-                    _log.error(
-                        'Stream check failed for %s. Not including' % (
-                            filename,))
+                    _log.error('Stream check failed for %s. Not including' %
+                               (filename, ))
                     continue
         else:
             _log.debug(
-                'Stream checking for M4A not implemented yet (file: %s)' % (
-                    filename,))
+                'Stream checking for M4A not implemented yet (file: %s)' %
+                (filename, ))
 
         if total_size + filesize > max_size:
             _log.info('Hit limit for maximum total size of data')
@@ -264,22 +282,34 @@ if __name__ == '__main__':
         total_size += filesize
         files.append(filename)
         new_listing.append(basename(filename))
-        uniques.append((artist.lower(), title.lower(),))
+        uniques.append((
+            artist.lower(),
+            title.lower(),
+        ))
 
         rating *= 5
         if rating > 5:
             rating = 5
         rating = math.trunc(rating)
 
-        ratings.append((rating, basename(filename),))
+        ratings.append((
+            rating,
+            basename(filename),
+        ))
 
     conn.close()
 
-    _log.info('%.2f GB (%.2f GiB) of data found' %
-              (total_size / (1000 ** 3), total_size / (1024 ** 3),),)
+    _log.info(
+        '%.2f GB (%.2f GiB) of data found' % (
+            total_size / (1000**3),
+            total_size / (1024**3),
+        ), )
     for fn in files:
         out = path_join(outdir, basename(fn))
-        _log.info('%s -> %s' % (fn, out,))
+        _log.info('%s -> %s' % (
+            fn,
+            out,
+        ))
         try:
             symlink(fn, out)
         except FileExistsError:
@@ -287,12 +317,15 @@ if __name__ == '__main__':
             symlink(fn, out)
 
     with open(path_join(outdir, '.timestamp'), 'w') as f:
-        f.write('%s\n' % (datetime.datetime.today(),))
+        f.write('%s\n' % (datetime.datetime.today(), ))
 
     with open(path_join(outdir, '.ratings'), 'w') as f:
         for rating, filename in ratings:
-            f.write('%s %s\n' % (rating, filename,))
+            f.write('%s %s\n' % (
+                rating,
+                filename,
+            ))
 
     if args.verbose:
         print('%s' % ('\n'.join(difflib.Differ().compare(
-            sorted(old_listing), sorted(new_listing))),))
+            sorted(old_listing), sorted(new_listing))), ))
