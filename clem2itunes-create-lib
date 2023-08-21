@@ -233,6 +233,9 @@ if __name__ == '__main__':
                 _log.error('STDERR: %s', e.stderr)
                 _log.error('STDOUT: %s', e.stdout)
                 raise e
+            else:
+                _log.warning('splitcue: STDERR: %s', e.stderr)
+                _log.warning('splitcue: STDOUT: %s', e.stdout)
 
         filesize = stat(filename).st_size
         cover_found = True
