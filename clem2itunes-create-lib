@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from os import listdir, mkdir, remove as rm, stat, symlink
-from os.path import (basename, dirname, expanduser, isdir, join as
-                     path_join, realpath, splitext)
+from os.path import (basename, dirname, expanduser, isdir, join as path_join,
+                     realpath, splitext)
 from sqlite3 import connect as sqlite_connect
 import argparse
 import datetime
@@ -18,16 +18,22 @@ FILE_URI_REGEX = re.compile(r'^file\://')
 _log = logging.getLogger('itunes-lib-maker')
 
 
-def _run(name: str):
+def _run(name: str, *, stderr: int | None = None):
+
     def z(args: Sequence[str]):
-        return sp.run((name,) + tuple(args), text=True, check=True, stdout=sp.PIPE)
+        return sp.run((name, ) + tuple(args),
+                      text=True,
+                      check=True,
+                      stdout=sp.PIPE,
+                      stderr=stderr)
+
     return z
 
 
 atomic = _run('AtomicParsley')
 id3ted = _run('id3ted')
 mp3check = _run('mp3check')
-mp3splt = _run('mp3splt')
+mp3splt = _run('mp3splt', stderr=sp.PIPE)
 
 
 def get_clementine_db_file_path():
@@ -60,7 +66,11 @@ class WritableDirectoryAction(argparse.Action):
             raise argparse.ArgumentTypeError('%s is not a readable directory' %
                                              (prospective_dir, ))
 
-    def __call__(self, _: argparse.ArgumentParser, namespace: argparse.Namespace, values: Any, __: str | None=None):
+    def __call__(self,
+                 _: argparse.ArgumentParser,
+                 namespace: argparse.Namespace,
+                 values: Any,
+                 __: str | None = None):
         was_list = True
         new_list = []
 
@@ -215,8 +225,14 @@ if __name__ == '__main__':
                 # Only the filename variable has to change and the below code
                 # works
                 filename = splitcue(tempdir, f.name, filename, track)
-        except (IOError, sp.CalledProcessError):
+        except FileNotFoundError:
             pass
+        except sp.CalledProcessError as e:
+            if ('error: the splitpoints are not in order' not in e.stderr
+                    and 'cue error: invalid cue file' not in e.stdout):
+                _log.error('STDERR: %s', e.stderr)
+                _log.error('STDOUT: %s', e.stdout)
+                raise e
 
         filesize = stat(filename).st_size
         cover_found = True
@@ -226,11 +242,12 @@ if __name__ == '__main__':
                 try:
                     data = id3ted(['-l', filename])
                 except UnicodeDecodeError as e:
-                    _log.error('Data from tool for file %s failed to decode to UTF-8. '
-                       'Not including' % (filename, ))
+                    _log.error(
+                        'Data from tool for file %s failed to decode to UTF-8. '
+                        'Not including' % (filename, ))
                     _log.error(e.object)
-                    _log.error('Start: %d, End: %d, Reason: %s', e.start, e.end,
-                       e.reason)
+                    _log.error('Start: %d, End: %d, Reason: %s', e.start,
+                               e.end, e.reason)
                     continue
             elif filename.endswith('.m4a'):
                 data = atomic([filename, '-t'])
