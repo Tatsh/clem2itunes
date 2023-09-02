@@ -31,7 +31,5 @@ id3ted/
 ehthumbs.db
 Thumbs.db
 
+dist/
 node_modules/
-.babelrc
-package*.json
-update-itunes.js

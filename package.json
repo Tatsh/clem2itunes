@@ -1,0 +1,78 @@
+{
+  "contributors": [
+    "Andrew Udvare <audvare@gmail.com>"
+  ],
+  "devDependencies": {
+    "@prettier/plugin-xml": "^3.2.0",
+    "@typescript-eslint/eslint-plugin": "^6.5.0",
+    "@typescript-eslint/parser": "^6.5.0",
+    "cspell": "^7.3.2",
+    "eslint": "^8.48.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-redos": "^4.4.5",
+    "eslint-plugin-typescript-sort-keys": "^3.0.0",
+    "format-imports": "^3.2.5",
+    "markdownlint-cli2": "^0.9.2",
+    "prettier": "^3.0.3",
+    "prettier-plugin-ini": "^1.1.0",
+    "prettier-plugin-sort-json": "^3.0.1",
+    "prettier-plugin-toml": "^1.0.0",
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.2.2",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
+  },
+  "importSorter": {
+    "autoFormat": "off",
+    "groupRules": [
+      {
+        "flags": "scripts"
+      },
+      {
+        "regex": "^[@0-9a-zA-Z]"
+      },
+      {
+        "regex": "^\\."
+      },
+      {
+        "regex": "^(src|test)"
+      }
+    ],
+    "keepUnused": [
+      "."
+    ],
+    "removeLastIndexInPath": true,
+    "removeLastSlashInPath": true,
+    "sortRules": {
+      "names": [
+        "_",
+        "AZ",
+        "Aa"
+      ]
+    }
+  },
+  "license": "MIT",
+  "main": "dist/index.js",
+  "name": "clem2itunes",
+  "prettier": {
+    "endOfLine": "lf",
+    "printWidth": 100,
+    "singleQuote": true
+  },
+  "repository": "git@github.com:Tatsh/clem2itunes.git",
+  "scripts": {
+    "build": "yarn webpack && poetry build",
+    "check-formatting": "yarn prettier -c . && poetry run isort . --check && poetry run yapf -prd . && markdownlint-cli2 '**/*.md' '#node_modules'",
+    "check-spelling": "cspell --no-progress .",
+    "clean-dict": "r=(); while IFS=$\\n read -r w; do ! rg --no-config -qi. -g '!.vscode/dictionary.txt' -m 1 \"$w\" . && r+=(\"$w\"); done < ./.vscode/dictionary.txt; j=$(printf \"|%s\" \"${r[@]}\"); j=\"^(${j:1})$\"; grep -Ev \"${j}\" ./.vscode/dictionary.txt > new && mv new ./.vscode/dictionary.txt",
+    "fix-pluggy": "touch \"$(poetry run python -c 'import inspect, os, pluggy; print(os.path.dirname(inspect.getabsfile(pluggy)))')/py.typed\"",
+    "format": "yarn prettier -w . && poetry run isort . && poetry run yapf -pri . && markdownlint-cli2 --fix '**/*.md' '#node_modules'",
+    "mypy": "yarn fix-pluggy && poetry run mypy .",
+    "poetry-publish": "yarn build && poetry publish",
+    "pylint": "poetry run pylint .",
+    "qa": "yarn eslint --report-unused-disable-directives src/*.ts && yarn mypy && yarn pylint && yarn check-spelling && yarn check-formatting",
+    "test": "poetry run pytest"
+  },
+  "version": "0.0.1"
+}
