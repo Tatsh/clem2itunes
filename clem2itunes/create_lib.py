@@ -134,7 +134,6 @@ def create_lib_main(split_dir: str,
 
                 logger.info(f'Splitting track #{track:d} ({artist} - \'{title}\') out of '
                             f'{basename(filename)} (tempdir = {tempdir})')
-
                 # Only the filename variable has to change and the below code
                 # works
                 filename = splitcue(tempdir, f.name, filename, track)  # pylint: disable=redefined-loop-name
