@@ -131,7 +131,6 @@ def create_lib_main(split_dir: str,
                 tempdir = path_join(splitdir, basename(dirname(filename)))
                 if not isdir(tempdir):
                     mkdir(tempdir)
-
                 logger.info(f'Splitting track #{track:d} ({artist} - \'{title}\') out of '
                             f'{basename(filename)} (tempdir = {tempdir})')
                 # Only the filename variable has to change and the below code
@@ -199,19 +198,8 @@ def create_lib_main(split_dir: str,
         total_size += filesize
         files.append(filename)
         new_listing.append(basename(filename))
-        uniques.append((
-            artist.lower(),
-            title.lower(),
-        ))
-        # pylint: disable=redefined-loop-name
-        rating *= 5
-        rating = min(rating, 5)
-        rating = math.trunc(rating)
-        # pylint: enable=redefined-loop-name
-        ratings.append((
-            rating,
-            basename(filename),
-        ))
+        uniques.append((artist.lower(), title.lower()))
+        ratings.append((math.trunc(min(rating * 5, 5)), basename(filename)))
     conn.close()
     logger.info(
         f'{total_size / (1000 ** 3):.2f} GB ({total_size / (1024 ** 3):.2f} GiB) of data found')
