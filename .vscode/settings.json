@@ -40,7 +40,5 @@
   "python.analysis.stubPath": ".stubs",
   "python.analysis.typeCheckingMode": "strict",
   "python.languageServer": "Pylance",
-  "python.linting.flake8Enabled": false,
-  "python.linting.pylintEnabled": true,
   "yaml.format.printWidth": 100
 }
