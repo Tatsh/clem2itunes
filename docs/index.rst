@@ -4,20 +4,17 @@ clem2itunes
 Commands
 --------
 
-.. click:: clem2itunes:sync_remote_main
+.. click:: clem2itunes.main:main
   :prog: clem2itunes
   :nested: full
 
-.. click:: clem2itunes:create_lib_main
-  :prog: clem2itunes-create-lib
-  :nested: full
+.. only:: html
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   .. toctree::
+      :maxdepth: 2
+      :caption: Contents:
 
-Indices and tables
-==================
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   Indices and tables
+   ==================
+   * :ref:`genindex`
+   * :ref:`modindex`
