@@ -1,35 +1,14 @@
-# Compiled
-# *.com
-*.class
-*.dll
-*.exe
-*.o
-*.so
-*.pyc
-*.pyo
-__pycache__/
-
-# Backups
+*.log
 *~
-*.swp*
-*.kate-swp
-
-# KDevelop
-.kdev4/
-
-# Miscellaneous
-*.sqlite
-id3ted/
-
-# OS generated files
+.*_cache/
+.coverage
+.cspellcache
 .directory
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100/
-.Trashes/
-ehthumbs.db
-Thumbs.db
-
-dist/
+.pnp.*
+/.yarn/install-state.gz
+/dist/
+/docs/_build/
+/man/_static/
+__pycache__/
+htmlcov/
 node_modules/

@@ -1,4 +1,4 @@
-from .create_lib import create_lib_main
-from .sync_remote import sync_remote_main
+"""clem2itunes."""
+from __future__ import annotations
 
-__all__ = ('create_lib_main', 'sync_remote_main')
+__version__ = '0.0.1'
