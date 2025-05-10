@@ -38,8 +38,22 @@ pip install clem2itunes
 
 ## Usage
 
-Add `-d` to show debug logs.
-
 ```shell
-clem2itunes
+Usage: clem2itunes [OPTIONS] COMMAND [ARGS]...
+
+  Tools for Strawberry libraries.
+
+Options:
+  -d, --debug  Enable debug level logging.
+  -h, --help   Show this message and exit.
+
+Commands:
+  create-library (c,cl,create,create-lib)
+                                  Create a curated music library.
+  sync (s)                        Sync remote library to local machine.
 ```
+
+`create-library` is useful for creating a maximally sized library of music for copying to any device
+based on song ratings. It tries to avoid duplicates, and splits MP3s (losslessly) using CUE files.
+
+`sync` is only for use on macOS to copy songs over, add them to iTunes/Music, and set ratings.

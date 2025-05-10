@@ -1,13 +1,20 @@
 (import 'defaults.libjsonnet') + {
   // Project-specific
   local top = self,
-  description: 'Crazy way to synchronise a remote Strawberry rated library with iTunes using Python, JXA and SSH.',
+  description: 'Crazy way to synchronise a remote Strawberry rated library to Music.app using Python, JXA and SSH.',
   keywords: ['command line', 'file management', 'multimedia', 'macos', 'ssh', 'strawberry'],
   project_name: 'clem2itunes',
   version: '0.0.1',
   want_main: true,
   citation+: {
     'date-released': '2025-05-09',
+  },
+  docs_conf+: {
+    config+: {
+      intersphinx_mapping+: {
+        anyio: ['https://anyio.readthedocs.io/en/stable/', null],
+      },
+    },
   },
   pyproject+: {
     project+: {
@@ -22,7 +29,6 @@
           anyio: '^4.9.0',
           'click-aliases': '^1.0.5',
           platformdirs: '^4.3.6',
-          tomlkit: '^0.13.2',
         },
         group+: {
           tests+: {

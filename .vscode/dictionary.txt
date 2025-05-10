@@ -65,8 +65,6 @@ splitpoints
 splt
 tatsh
 testpaths
-toctree
-tomlkit
 tryfirst
 udvare
 uniques

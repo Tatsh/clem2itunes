@@ -14,7 +14,7 @@ classifiers = [
   "Programming Language :: Python :: 3.13",
   "Typing :: Typed",
 ]
-description = "Crazy way to synchronise a remote Strawberry rated library with iTunes using Python, JXA and SSH."
+description = "Crazy way to synchronise a remote Strawberry rated library to Music.app using Python, JXA and SSH."
 dynamic = ["dependencies", "requires-python"]
 keywords = ["command line", "file management", "multimedia", "macos", "ssh", "strawberry"]
 license = "MIT"
@@ -91,7 +91,6 @@ click-aliases = "^1.0.5"
 colorlog = "^6.9.0"
 platformdirs = "^4.3.6"
 python = ">=3.10,<3.14"
-tomlkit = "^0.13.2"
 typing-extensions = "^4.13.1"
 
 [tool.poetry.group]

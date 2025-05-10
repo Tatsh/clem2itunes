@@ -30,6 +30,8 @@ level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .TH "CLEM2ITUNES" "1" "May 10, 2025" "0.0.1" "clem2itunes"
 .SH NAME
 clem2itunes \- clem2itunes v0.0.1
+.sp
+Crazy way to synchronise a remote Strawberry rated library to Music.app using Python, JXA and SSH.
 .SH COMMANDS
 .SS clem2itunes
 .sp
@@ -145,7 +147,7 @@ Local directory to sync to.
 .INDENT 0.0
 .TP
 .B \-r, \-\-remote\-dir <remote_dir>
-Remote directory to sync(%(username)s will be replaced with the current username or the argument to \-\-user).
+Remote directory to sync (%(username)s will be replaced with the current username or the argument to \-\-user).
 .UNINDENT
 .INDENT 0.0
 .TP
@@ -164,6 +166,12 @@ Arguments
 .B HOST
 Required argument
 .UNINDENT
+.sp
+\fBcreate\-library\fP is useful for creating a maximally sized library of music for copying to any
+device based on song ratings. It tries to avoid duplicates, and splits MP3s (losslessly) using CUE
+files.
+.sp
+\fBsync\fP is only for use on macOS to copy songs over, add them to iTunes/Music, and set ratings.
 .SH AUTHOR
 Andrew Udvare <audvare@gmail.com>
 .SH COPYRIGHT
