@@ -27,7 +27,7 @@ level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .in \\n[rst2man-indent\\n[rst2man-indent-level]]u
 ..
-.TH "CLEM2ITUNES" "1" "May 09, 2025" "0.0.1" "clem2itunes"
+.TH "CLEM2ITUNES" "1" "May 10, 2025" "0.0.1" "clem2itunes"
 .SH NAME
 clem2itunes \- clem2itunes v0.0.1
 .SH COMMANDS
@@ -130,7 +130,7 @@ Remote create\-lib script (full path or a file in PATH).
 .INDENT 0.0
 .TP
 .B \-\-splitcue\-cache\-dir <splitcue_cache_dir>
-Remote directory to save split CUE data.
+Remote directory to save split CUE data (%(username)s will be replaced with the current username or the argument to \-\-user).
 .UNINDENT
 .INDENT 0.0
 .TP
@@ -145,7 +145,7 @@ Local directory to sync to.
 .INDENT 0.0
 .TP
 .B \-r, \-\-remote\-dir <remote_dir>
-Remote directory to sync.
+Remote directory to sync(%(username)s will be replaced with the current username or the argument to \-\-user).
 .UNINDENT
 .INDENT 0.0
 .TP
