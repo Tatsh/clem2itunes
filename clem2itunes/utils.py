@@ -124,7 +124,7 @@ ssh = runner('ssh')
 """Run ``ssh`` command."""
 
 
-async def get_db_file_path() -> Path:
+async def get_db_file_path() -> Path:  # pragma: no cover
     """Get the path to the Strawberry database file."""
     return await (Path(user_data_dir('strawberry')) / 'strawberry' /
                   'strawberry.db').resolve(strict=True)
@@ -166,10 +166,9 @@ async def get_songs_from_db(
         f'rating >= ? AND ({like_column} LIKE "%.mp3" OR {like_column} LIKE "%.m4a") '
         'ORDER BY rating ASC')
     log.debug('Query: %s', query)
-    async with aiosqlite.connect(database.name) as conn, conn.execute(query, (threshold,)) as c:
-        async for row in c:
-            yield (row['rating'], row['artist'], row['title'],
-                   Path(re.sub(_FILE_URI_REGEX, '', row['filename'])), row['track'])
+    async with aiosqlite.connect(str(database)) as conn, conn.execute(query, (threshold,)) as c:
+        async for rating, artist, title, uri, track in c:
+            yield rating, artist, title, Path(re.sub(_FILE_URI_REGEX, '', uri)), track
 
 
 async def can_read_file(file: Path) -> bool:
@@ -194,7 +193,7 @@ async def is_mp3_stream_valid(file: Path) -> bool:
 async def try_split_cue(file: Path, split_dir: Path, track: int, artist: str, title: str) -> Path:
     """Try to split a MP3 file using its associated CUE file."""  # noqa: DOC501
     cue_file = file.with_suffix('.cue')
-    if cue_file.exists():
+    if await cue_file.exists():
         tempdir = split_dir / file.parent.name
         await tempdir.mkdir(parents=True, exist_ok=True)
         log.debug('Splitting track %d (`%s` - `%s`) out of `%s` (tempdir = `%s`).', track, artist,
@@ -220,23 +219,23 @@ async def has_cover(file: Path) -> bool:
     ------
     NotImplementedError
         If the file type is not supported.
+    UnicodeDecodeError
     """
-    async with await file.open('rb'):
-        if file.suffix == '.mp3':
-            completed_process = await id3ted('-l', str(file))
-        elif file.suffix == '.m4a':
-            completed_process = await atomic_parsley(str(file), '-t')
-        else:
-            raise NotImplementedError(str(file))
+    if file.suffix == '.mp3':
+        completed_process = await id3ted('-l', str(file))
+    elif file.suffix == '.m4a':
+        completed_process = await atomic_parsley(str(file), '-t')
+    else:  # pragma: no cover
+        raise NotImplementedError(str(file))
     assert completed_process.stdout is not None
     try:
         data = (await completed_process.stdout.read()).decode()
     except UnicodeDecodeError as e:
-        log.exception('Data from tool for file `%s` failed to decode to UTF-8. Not including.',
-                      file)
+        log.exception('Data from file `%s` failed to decode to UTF-8.', file)
         log.exception('Start: %d, End: %d, Reason: %s', e.start, e.end, e.reason)
-    return ((file.suffix == '.mp3' and 'APIC: image/jpeg' not in data)
-            or (file.suffix == '.m4a' and 'Atom "covr" contains: ' not in data))
+        raise
+    return ((file.suffix == '.mp3' and 'APIC: image/jpeg' in data)
+            or (file.suffix == '.m4a' and 'Atom "covr" contains: ' in data))
 
 
 async def create_library(outdir_p: Path,

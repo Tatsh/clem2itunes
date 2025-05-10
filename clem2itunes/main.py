@@ -15,6 +15,7 @@ import click
 from .utils import create_library as do_create_library, osascript, rsync, setup_logging, ssh
 
 __all__ = ('main',)
+
 USER = os.environ.get('USER', 'default')
 log = logging.getLogger(__name__)
 
@@ -88,9 +89,11 @@ async def _do_sync(host: str,
 @click.option('--remote-create-lib',
               default='clem2itunes',
               help='Remote create-lib script (full path or a file in PATH).')
-@click.option('--splitcue-cache-dir',
-              default='/home/%(username)s/.cache/splitcue',
-              help='Remote directory to save split CUE data.')
+@click.option(
+    '--splitcue-cache-dir',
+    default='/home/%(username)s/.cache/splitcue',
+    help=('Remote directory to save split CUE data (%(username)s will be replaced with the'
+          ' current username or the argument to --user).'))
 @click.option('-S', '--size-limit', help='Size limit in GB.', default=32, type=int)
 @click.option('-l',
               '--local-dir',
@@ -100,7 +103,8 @@ async def _do_sync(host: str,
 @click.option('-r',
               '--remote-dir',
               default='/home/%(username)s/import',
-              help='Remote directory to sync.')
+              help=('Remote directory to sync (%(username)s will be replaced with the'
+                    ' current username or the argument to --user).'))
 @click.option('-u', '--user', default=USER, help='Remote username.')
 @click.option('-t', '--threshold', default=0.8, help='Minimum rating out of 1.', type=float)
 def sync(host: str,

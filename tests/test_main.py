@@ -10,12 +10,11 @@ if TYPE_CHECKING:
 
 
 def test_sync_runs_all_steps(mocker: MockerFixture, runner: CliRunner) -> None:
-    mock_logger = mocker.patch('clem2itunes.sync_remote.log')
-    mock_which = mocker.patch('clem2itunes.sync_remote.which', return_value=True)
-    mock_osascript = mocker.patch('clem2itunes.sync_remote.osascript',
-                                  new_callable=mocker.AsyncMock)
-    mock_rsync = mocker.patch('clem2itunes.sync_remote.rsync', new_callable=mocker.AsyncMock)
-    mock_ssh = mocker.patch('clem2itunes.sync_remote.ssh', new_callable=mocker.AsyncMock)
+    mock_logger = mocker.patch('clem2itunes.main.log')
+    mock_which = mocker.patch('clem2itunes.main.which', return_value=True)
+    mock_osascript = mocker.patch('clem2itunes.main.osascript', new_callable=mocker.AsyncMock)
+    mock_rsync = mocker.patch('clem2itunes.main.rsync', new_callable=mocker.AsyncMock)
+    mock_ssh = mocker.patch('clem2itunes.main.ssh', new_callable=mocker.AsyncMock)
     result = runner.invoke(main, [
         'sync', 'host.example.com', '--remote-create-lib', 'remote_script', '--splitcue-cache-dir',
         '/splitcue', '-S', '10', '-l', '/dev', '-r', '/a/remote', '-u', 'testuser', '-t', '0.9',
@@ -34,9 +33,9 @@ def test_sync_runs_all_steps(mocker: MockerFixture, runner: CliRunner) -> None:
 
 
 def test_sync_aborts_if_not_macos(mocker: MockerFixture, runner: CliRunner) -> None:
-    mock_which = mocker.patch('clem2itunes.sync_remote.which', return_value=False)
-    mock_asyncio_run = mocker.patch('clem2itunes.sync_remote.asyncio.run')
-    mock_logger = mocker.patch('clem2itunes.sync_remote.log')
+    mock_which = mocker.patch('clem2itunes.main.which', return_value=False)
+    mock_asyncio_run = mocker.patch('clem2itunes.main.asyncio.run')
+    mock_logger = mocker.patch('clem2itunes.main.log')
     result = runner.invoke(main, ['sync', 'host.example.com', '-l', '/dev'])
     assert result.exit_code != 0
     mock_which.assert_called_once_with('osascript')

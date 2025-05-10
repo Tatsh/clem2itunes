@@ -45,6 +45,7 @@ nsutf
 numpy
 numpydoc
 osascript
+otestfile
 pipx
 platformdirs
 pycache
