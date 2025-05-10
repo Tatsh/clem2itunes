@@ -10,9 +10,11 @@ Commands
 
 .. only:: html
 
-   .. toctree::
-      :maxdepth: 2
-      :caption: Contents:
+   Library
+   -------
+   .. automodule:: clem2itunes.utils
+      :members:
+      :exclude-members: setup_logging
 
    Indices and tables
    ==================

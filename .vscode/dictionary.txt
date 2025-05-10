@@ -3,6 +3,7 @@ anyio
 apic
 asyncio
 autodoc
+automodule
 clem
 codeowners
 colored

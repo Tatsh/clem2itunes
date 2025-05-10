@@ -75,4 +75,7 @@ html_theme_options = {
     'site_url': 'https://clem2itunes.readthedocs.org',
     'toc_title_is_page_title': True
 }
-intersphinx_mapping = {'python': ('https://docs.python.org/3', None)}
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3', None),
+    'anyio': ('https://anyio.readthedocs.io/en/stable/', None)
+}

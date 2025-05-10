@@ -20,18 +20,10 @@ import aiosqlite
 if TYPE_CHECKING:
     from collections.abc import AsyncIterator, Callable, Coroutine
 
-__all__ = (
-    'atomic_parsley',
-    'can_read_file',
-    'id3ted',
-    'mp3check',
-    'mp3splt',
-    'osascript',
-    'rsync',
-    'runner',
-    'setup_logging',
-    'split_cue',
-)
+__all__ = ('atomic_parsley', 'can_read_file', 'create_library', 'get_db_file_path',
+           'get_songs_from_db', 'has_cover', 'id3ted', 'is_mp3_stream_valid', 'mp3check', 'mp3splt',
+           'osascript', 'rsync', 'runner', 'setup_logging', 'setup_logging', 'split_cue', 'ssh',
+           'try_split_cue')
 
 _FILE_URI_REGEX = re.compile(r'^file\://')
 log = logging.getLogger(__name__)
@@ -80,7 +72,11 @@ def runner(name: str,
            stdout: int | None = asp.PIPE,
            check: bool = True,
            text: bool = True) -> Callable[..., Coroutine[Any, Any, asp.Process]]:
-    """Create a function to run a command with the given arguments."""
+    """
+    Create a function to run a command with the given arguments.
+
+    Arguments are based on :py:func:`subprocess.run`.
+    """
     async def cb(*args: str) -> asp.Process:
         resolved_args = list(args)
         quoted_cmd = ' '.join(quote(x) for x in resolved_args)
@@ -153,8 +149,8 @@ async def get_songs_from_db(
 
     Yields
     ------
-    aiosqlite.Row
-        A row containing the rating, artist, title, filename, and track number.
+    tuple[float, str, str, Path, int]
+        A tuple containing the rating, artist, title, filename, and track number.
     """
     database = database or await get_db_file_path()
     log.debug('Database file: %s', database)
@@ -220,6 +216,7 @@ async def has_cover(file: Path) -> bool:
     NotImplementedError
         If the file type is not supported.
     UnicodeDecodeError
+        If tag output cannot be decoded as UTF-8.
     """
     if file.suffix == '.mp3':
         completed_process = await id3ted('-l', str(file))
@@ -246,6 +243,33 @@ async def create_library(outdir_p: Path,
                          *,
                          include_no_cover: bool = False,
                          use_si: bool = True) -> None:
+    """
+    Create a curated music library from a Strawberry or Clementine database.
+
+    Parameters
+    ----------
+    outdir_p : Path
+        Directory to save the curated library.
+
+    split_dir : Path
+        Directory to save split CUE data.
+
+    database : Path | None
+        Path to the database file. If not passed, the Strawberry database file will be used.
+
+    threshold : float
+        Rating threshold out of 1.0.
+
+    max_size : int
+        Maximum size of the library in GiB or GB. If `use_si` is True, the size is in GB,
+        otherwise it is in GiB.
+
+    include_no_cover : bool
+        If ``True``, include files without embedded cover art.
+
+    use_si : bool
+        If True, use SI units (GB) for the maximum size. Otherwise, use binary units (GiB).
+    """
     files: set[Path] = set()
     max_size *= (1000 ** 3) if use_si else (1024 ** 3)
     new_listing: list[str] = []
