@@ -4,7 +4,7 @@
 [![PyPI - Version](https://img.shields.io/pypi/v/clem2itunes)](https://pypi.org/project/clem2itunes/)
 [![GitHub tag (with filter)](https://img.shields.io/github/v/tag/Tatsh/clem2itunes)](https://github.com/Tatsh/clem2itunes/tags)
 [![License](https://img.shields.io/github/license/Tatsh/clem2itunes)](https://github.com/Tatsh/clem2itunes/blob/master/LICENSE.txt)
-[![GitHub commits since latest release (by SemVer including pre-releases)](https://img.shields.io/github/commits-since/Tatsh/clem2itunes/v0.1.0/master)](https://github.com/Tatsh/clem2itunes/compare/v0.1.0...master)
+[![GitHub commits since latest release (by SemVer including pre-releases)](https://img.shields.io/github/commits-since/Tatsh/clem2itunes/v0.1.1/master)](https://github.com/Tatsh/clem2itunes/compare/v0.1.1...master)
 [![QA](https://github.com/Tatsh/clem2itunes/actions/workflows/qa.yml/badge.svg)](https://github.com/Tatsh/clem2itunes/actions/workflows/qa.yml)
 [![Tests](https://github.com/Tatsh/clem2itunes/actions/workflows/tests.yml/badge.svg)](https://github.com/Tatsh/clem2itunes/actions/workflows/tests.yml)
 [![Coverage Status](https://coveralls.io/repos/github/Tatsh/clem2itunes/badge.svg?branch=master)](https://coveralls.io/github/Tatsh/clem2itunes?branch=master)

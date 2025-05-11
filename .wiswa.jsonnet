@@ -4,7 +4,7 @@
   description: 'Crazy way to synchronise a remote Strawberry rated library to Music.app using Python, JXA and SSH.',
   keywords: ['command line', 'file management', 'multimedia', 'macos', 'ssh', 'strawberry'],
   project_name: 'clem2itunes',
-  version: '0.1.0',
+  version: '0.1.1',
   want_main: true,
   citation+: {
     'date-released': '2025-05-09',
