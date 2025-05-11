@@ -139,7 +139,7 @@ async def test_split_cue(mocker: MockerFixture) -> None:
     temp_dir.__str__.return_value = 'temp_dir'
     temp_dir.__truediv__.return_value = mock_candidate
     candidate = await split_cue(temp_dir, mock_cue, mock_mp3, 1)
-    mock_mp3splt.assert_called_once_with('-xKf', '-C', '8', '-T', '12', '-otestfile.mp3-@n', '-d',
+    mock_mp3splt.assert_called_once_with('-xKf', '-C', '8', '-T', '12', '-otestfile.mp3-@n2', '-d',
                                          'temp_dir', '-c', 'testfile.cue', 'testfile.mp3')
     assert candidate == mock_candidate
 
@@ -275,7 +275,7 @@ async def test_try_split_cue_error_2(mocker: MockerFixture) -> None:
     mock_split_dir = mocker.MagicMock()
     mock_split_dir.__truediv__.return_value.mkdir = mocker.AsyncMock()
     returned_file = await try_split_cue(mock_file, mock_split_dir, 1, '', '')
-    assert returned_file == mock_file
+    assert returned_file is None
 
 
 @pytest.mark.asyncio
@@ -333,8 +333,11 @@ async def test_create_library(mocker: MockerFixture) -> None:
         st_size=1024 ** 2)))
     song6 = mocker.MagicMock(stat=mocker.AsyncMock(return_value=mocker.MagicMock(
         st_size=1024 ** 10)))
+    song7 = mocker.MagicMock(stat=mocker.AsyncMock(return_value=mocker.MagicMock(
+        st_size=1024 ** 2)))
 
-    mocker.patch('clem2itunes.utils.can_read_file', side_effect=[True, True, False, True, True])
+    mocker.patch('clem2itunes.utils.can_read_file',
+                 side_effect=[True, True, False, True, True, True])
     mock_c = mocker.MagicMock()
     mock_c.__aiter__.return_value = iter([
         (0.6, 'artist', 'title', song1, 1),  # Normal
@@ -343,12 +346,13 @@ async def test_create_library(mocker: MockerFixture) -> None:
         (0.6, 'Artist', 'Title', song3, 1),  # Skipped due to artist/title `in uniques`
         (0.6, 'Artist 3', 'Title', song4, 1),  # Skipped due unreadability
         (0.6, 'Artist 4', 'Title', song5, 1),  # Skipped due to no cover
+        (0.6, 'Artist 6', 'Title', song7, 1),  # Skipped due to invalid CUE
         (0.6, 'Artist 5', 'Title', song6, 1),  # Skipped due to size
     ])
     mocker.patch('clem2itunes.utils.get_songs_from_db', return_value=mock_c)
-    mocker.patch('clem2itunes.utils.has_cover', side_effect=[True, True, False, True])
+    mocker.patch('clem2itunes.utils.has_cover', side_effect=[True, True, False, True, True])
     mocker.patch('clem2itunes.utils.is_mp3_stream_valid')
-    mocker.patch('clem2itunes.utils.try_split_cue', side_effect=[song1, song2, song3, song6])
+    mocker.patch('clem2itunes.utils.try_split_cue', side_effect=[song1, song2, song3, None, song6])
     mock_outdir_p = mocker.MagicMock()
     mock_outdir_p.__truediv__.return_value = mocker.MagicMock()
     mock_outdir_p.__truediv__.return_value.exists = mocker.AsyncMock(

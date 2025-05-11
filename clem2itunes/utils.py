@@ -134,7 +134,7 @@ async def split_cue(temp_dir: Path, cue_file: Path, mp3_file: Path, track: int) 
         return candidate
     log.debug('Candidate split MP3 does not exist.')
     p = await mp3splt('-xKf', '-C', '8', '-T', '12', '-o'
-                      f'{mp3_file.stem}-@n', '-d', str(temp_dir), '-c', str(cue_file),
+                      f'{mp3_file.stem}-@n2', '-d', str(temp_dir), '-c', str(cue_file),
                       str(mp3_file))
     assert p.stdout is not None
     log.debug((await p.stdout.read()).strip())
@@ -186,8 +186,16 @@ async def is_mp3_stream_valid(file: Path) -> bool:
     return True
 
 
-async def try_split_cue(file: Path, split_dir: Path, track: int, artist: str, title: str) -> Path:
-    """Try to split a MP3 file using its associated CUE file."""  # noqa: DOC501
+async def try_split_cue(file: Path, split_dir: Path, track: int, artist: str,
+                        title: str) -> Path | None:
+    """
+    Try to split a MP3 file using its associated CUE file.
+
+    Raises
+    ------
+    sp.CalledProcessError
+        If the CUE file cannot be processed.
+    """  # noqa: DOC502,DOC501
     cue_file = file.with_suffix('.cue')
     if await cue_file.exists():
         tempdir = split_dir / file.parent.name
@@ -197,13 +205,13 @@ async def try_split_cue(file: Path, split_dir: Path, track: int, artist: str, ti
         try:
             return await split_cue(tempdir, cue_file, file, track)
         except sp.CalledProcessError as e:
-            if ('error: the splitpoints are not in order' not in e.stderr
-                    and 'cue error: invalid cue file' not in e.stdout):
-                log.exception('STDERR: %s', e.stderr)
-                log.exception('STDOUT: %s', e.stdout)
-                raise
-            log.warning('mp3splt: STDERR: %s', e.stderr)
-            log.warning('mp3splt: STDOUT: %s', e.stdout)
+            if 'the splitpoints are not in order' in e.stderr:
+                log.warning('CUE file `%s` split points are not order.', cue_file)
+                return None
+            log.exception('Check encoding of the CUE file %s.', cue_file)
+            log.exception('STDERR: %s', e.stderr)
+            log.exception('STDOUT: %s', e.stdout)
+            raise
     return file
 
 
@@ -289,12 +297,17 @@ async def create_library(outdir_p: Path,
             log.debug('File already in list: %s', file)
             continue
         if (artist.lower(), title.lower()) in uniques:
-            log.debug('Artist `%s` + title `%s` are already in unique list.', artist, title)
+            log.debug('Artist `%s` + title `%s` (file: `%s`) are already in unique list.', artist,
+                      title, file)
             continue
         if not (await can_read_file(file)):
             log.warning('Bad data in database. File not found or is not readable: %s.', file)
             continue
-        file = await try_split_cue(file, split_dir, track, artist, title)  # noqa: PLW2901
+        actual_file = await try_split_cue(file, split_dir, track, artist, title)
+        if not actual_file:
+            log.warning('File `%s` has an invalid CUE file. Not including.', file)
+            continue
+        file = actual_file  # noqa: PLW2901
         filesize = (await file.stat()).st_size
         if total_size + filesize > max_size:
             log.info('Hit limit for maximum total size of data.')
