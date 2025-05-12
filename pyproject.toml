@@ -86,7 +86,7 @@ include = ["man"]
 [tool.poetry.dependencies]
 aiosqlite = "^0.21.0"
 anyio = "^4.9.0"
-click = "^8.1.8"
+click = "^8.2.0"
 click-aliases = "^1.0.5"
 colorlog = "^6.9.0"
 platformdirs = "^4.3.6"
