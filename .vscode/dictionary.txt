@@ -4,6 +4,7 @@ apic
 asyncio
 autodoc
 automodule
+bsky
 clem
 codeowners
 colored
