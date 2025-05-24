@@ -9,17 +9,17 @@ ObjC.import('stdlib');
 const it = new ITunes();
 // FIXME Read arguments
 const dir = it.finder.home().folders.byName('Music').folders.byName('import');
-console.log('Deleting orphaned tracks');
+console.log('Deleting orphaned tracks.');
 it.deleteOrphanedTracks();
-console.log('Updating iTunes track list');
+console.log('Updating iTunes track list.');
 it.addTracksAtPath(dir);
 const ratings: { [loc: string]: ITunesTrack } = {};
-console.log('Building basename:track hash');
+console.log('Building basename:track hash.');
 for (const track of it.library.tracks()) {
   ratings[ObjC.unwrap($.NSString.stringWithString(track.location().toString()).lastPathComponent)] =
     track;
 }
-console.log('Setting ratings');
+console.log('Setting ratings.');
 for (const [rating, filename] of ObjC.unwrap(
   $.NSString.stringWithContentsOfFileUsedEncodingError(
     dir.items.byName('.ratings').url().replace(FILE_URI_PREFIX_RE, ''),
@@ -35,11 +35,11 @@ for (const [rating, filename] of ObjC.unwrap(
     ([ratingStr, filename]) => [(parseInt(ratingStr, 10) / 5) * 100, filename] as [number, string],
   )) {
   if (!(filename in ratings)) {
-    throw new Error(`File not found: ${filename}`);
+    throw new Error(`File not found: ${filename}.`);
   }
   ratings[filename]().rating = rating;
 }
-console.log('Syncing device if present');
+console.log('Syncing device if present.');
 try {
   it.syncDevice();
 } catch (error) {

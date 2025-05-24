@@ -72,13 +72,13 @@ export default class ITunes {
       try {
         loc = track.location();
       } catch (e) {
-        console.debug(`Removing ${name}`);
+        console.debug(`Removing ${name}.`);
         ret.push(track);
         track.delete();
         continue;
       }
       if (!loc || !this.finder.exists(loc)) {
-        console.debug(`Removing ${name}`);
+        console.debug(`Removing ${name}.`);
         ret.push(track);
         track.delete();
       }
