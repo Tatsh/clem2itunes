@@ -106,6 +106,8 @@ def runner(name: str,
 
 atomic_parsley = runner('AtomicParsley')
 """Run ``AtomicParsley`` command."""
+ffprobe = runner('ffprobe')
+"""Run ``ffprobe`` command."""
 id3ted = runner('id3ted')
 """Run ``id3ted`` command."""
 mp3check = runner('mp3check')
@@ -141,9 +143,10 @@ async def split_cue(temp_dir: Path, cue_file: Path, mp3_file: Path, track: int) 
     return candidate
 
 
-async def get_songs_from_db(
-        database: Path | None = None,
-        threshold: float = 0.6) -> AsyncIterator[tuple[float, str, str, Path, int]]:
+async def get_songs_from_db(database: Path | None = None,
+                            threshold: float = 0.6,
+                            *,
+                            flac: bool = False) -> AsyncIterator[tuple[float, str, str, Path, int]]:
     """
     Get song information from the Strawberry database.
 
@@ -157,9 +160,10 @@ async def get_songs_from_db(
     is_clementine = database.name.endswith('clementine.db')
     filename_column = 'filename' if is_clementine else 'url AS filename'
     like_column = 'filename' if is_clementine else 'url'
+    flac_part = f' OR {like_column} LIKE "%.flac"' if flac else ''
     query = (
         f'SELECT rating, artist, title, {filename_column}, track FROM songs WHERE '  # noqa: S608
-        f'rating >= ? AND ({like_column} LIKE "%.mp3" OR {like_column} LIKE "%.m4a") '
+        f'rating >= ? AND ({like_column} LIKE "%.mp3" OR {like_column} LIKE "%.m4a"{flac_part}) '
         'ORDER BY rating ASC')
     log.debug('Query: %s', query)
     async with aiosqlite.connect(str(database)) as conn, conn.execute(query, (threshold,)) as c:
@@ -230,6 +234,9 @@ async def has_cover(file: Path) -> bool:
         completed_process = await id3ted('-l', str(file))
     elif file.suffix == '.m4a':
         completed_process = await atomic_parsley(str(file), '-t')
+    elif file.suffix == '.flac':
+        completed_process = await ffprobe('-v', 'quiet', '-print_format', 'json', '-show_format',
+                                          '-show_streams', str(file))
     else:  # pragma: no cover
         raise NotImplementedError(str(file))
     assert completed_process.stdout is not None
@@ -240,7 +247,8 @@ async def has_cover(file: Path) -> bool:
         log.exception('Start: %d, End: %d, Reason: %s', e.start, e.end, e.reason)
         raise
     return ((file.suffix == '.mp3' and 'APIC: image/jpeg' in data)
-            or (file.suffix == '.m4a' and 'Atom "covr" contains: ' in data))
+            or (file.suffix == '.m4a' and 'Atom "covr" contains: ' in data)
+            or (file.suffix == '.flac' and '"codec_name": "mjpeg"' in data))
 
 
 async def create_library(outdir_p: Path,
@@ -249,6 +257,7 @@ async def create_library(outdir_p: Path,
                          threshold: float = 0.6,
                          max_size: int = 32,
                          *,
+                         flac: bool = False,
                          include_no_cover: bool = False,
                          use_si: bool = True) -> None:
     """
@@ -272,6 +281,9 @@ async def create_library(outdir_p: Path,
         Maximum size of the library in GiB or GB. If `use_si` is True, the size is in GB,
         otherwise it is in GiB.
 
+    flac : bool
+        If ``True``, allow FLAC files. Otherwise, only MP3 and M4A files are allowed.
+
     include_no_cover : bool
         If ``True``, include files without embedded cover art.
 
@@ -288,11 +300,14 @@ async def create_library(outdir_p: Path,
     total_size = 0
     uniques: set[tuple[str, str]] = set()
     log.info('Cleaning out directory.')
+    await split_dir.mkdir(parents=True, exist_ok=True)
     await outdir_p.mkdir(parents=True, exist_ok=True)
     async for item in outdir_p.iterdir():
         old_listing.append(str(await item.resolve(strict=True)))
         await item.unlink()
-    async for rating, artist, title, file, track in get_songs_from_db(database, threshold):
+    async for rating, artist, title, file, track in get_songs_from_db(database,
+                                                                      threshold,
+                                                                      flac=flac):
         if file in files:
             log.debug('File already in list: %s', file)
             continue
@@ -303,7 +318,8 @@ async def create_library(outdir_p: Path,
         if not (await can_read_file(file)):
             log.warning('Bad data in database. File not found or is not readable: %s.', file)
             continue
-        actual_file = await try_split_cue(file, split_dir, track, artist, title)
+        actual_file = (await try_split_cue(file, split_dir, track, artist, title)
+                       if file.suffix == '.mp3' else file)
         if not actual_file:
             log.warning('File `%s` has an invalid CUE file. Not including.', file)
             continue
@@ -313,7 +329,7 @@ async def create_library(outdir_p: Path,
             log.info('Hit limit for maximum total size of data.')
             break
         total_size += filesize
-        if not await has_cover(file) and not include_no_cover:
+        if not include_no_cover and not await has_cover(file):
             log.warning('No cover found in `%s`. Skipping.', file)
             no_cover.add(file)
             continue
@@ -323,6 +339,9 @@ async def create_library(outdir_p: Path,
             continue
         if file.suffix == '.m4a':  # pragma: no cover
             log.debug('Stream checking for M4A not implemented yet (file: `%s`).', file)
+        if file.suffix == '.flac':  # pragma: no cover
+            log.debug('Stream checking for FLAC not implemented yet (file: `%s`).', file)
+        log.debug('Adding: %s', file)
         files.add(file)
         new_listing.append(str(file))
         ratings.append((math.trunc(min(rating * 5, 5)), file))

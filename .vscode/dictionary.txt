@@ -23,6 +23,7 @@ erdantic
 esbenp
 esbonio
 excinfo
+ffprobe
 fontawesome
 furb
 genindex
@@ -40,6 +41,7 @@ levelname
 lextudio
 libjsonnet
 linters
+mjpeg
 modindex
 mypy
 norecursedirs
@@ -57,9 +59,11 @@ pylance
 pyproject
 pyright
 pytest
+readlink
 regen
 rstcheck
 schemafile
+sdcard
 sphinxcontrib
 splitcue
 splitpoints

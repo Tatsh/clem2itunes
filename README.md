@@ -57,3 +57,14 @@ Commands:
 based on song ratings. It tries to avoid duplicates, and splits MP3s (losslessly) using CUE files.
 
 `sync` is only for use on macOS to copy songs over, add them to iTunes/Music, and set ratings.
+
+### Sync a library to an Android device
+
+Assumes the library is at `~/import`. You have to create the `/sdcard/Music/import` directory on the
+device first.
+
+```shell
+for i in ~/import/*; do adb push --sync -Z "$(readlink -f "$i")" /sdcard/Music/import; done
+```
+
+If your machine lacks `readlink`, use `perl -MCwd -le 'print Cwd::abs_path shift' ...` instead.

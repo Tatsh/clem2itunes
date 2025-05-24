@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD024 -->
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
@@ -6,6 +8,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [unreleased]
+
+## [0.1.2]
+
+### Added
+
+- Allow FLAC files to be added with the `--flac` flag. These files will get synchronised but Music
+  will likely ignore them.
+
+### Changed
+
+- Added default platform-specific value for the split CUE cache directory.
+
+### Fixed
+
+- Only split CUE/MP3 and not CUE/FLAC, etc.
 
 ## [0.1.1]
 
@@ -25,4 +42,4 @@ Revised version.
 
 First version.
 
-[unreleased]: https://github.com/Tatsh/clem2itunes/compare/v0.1.1...HEAD
+[unreleased]: https://github.com/Tatsh/clem2itunes/compare/v0.1.2...HEAD
