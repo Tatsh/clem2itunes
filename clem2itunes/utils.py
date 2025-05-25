@@ -139,7 +139,7 @@ async def split_cue(temp_dir: Path, cue_file: Path, mp3_file: Path, track: int) 
                       f'{mp3_file.stem}-@n2', '-d', str(temp_dir), '-c', str(cue_file),
                       str(mp3_file))
     assert p.stdout is not None
-    log.debug((await p.stdout.read()).strip())
+    log.debug('Output: %s', (await p.stdout.read()).strip())
     return candidate
 
 
