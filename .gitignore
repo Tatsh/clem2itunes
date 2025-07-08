@@ -6,9 +6,12 @@
 .directory
 .pnp.*
 /.yarn/install-state.gz
-/dist/
+/coverage/
+/dist/*
 /docs/_build/
 /man/_static/
 __pycache__/
 htmlcov/
 node_modules/
+
+!dist/index.js

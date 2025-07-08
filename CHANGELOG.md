@@ -9,6 +9,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [unreleased]
 
+## Changed
+
+- Now using _jxa-lib_ and _jxa-types_ in the TypeScript code.
+
 ## [0.1.2]
 
 ### Added

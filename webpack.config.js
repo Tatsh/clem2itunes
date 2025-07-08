@@ -1,17 +1,26 @@
+/* eslint-disable no-undef */
+/* eslint-disable @typescript-eslint/no-require-imports */
 const path = require('path');
+const ShebangPlugin = require('webpack-shebang-plugin');
+
 module.exports = {
-  devtool: false,
   entry: './src/index.ts',
-  mode: 'development',
+  mode: 'none',
   module: {
-    rules: [{ exclude: /node_modules/, test: /\.tsx?$/, use: 'ts-loader' }],
+    rules: [
+      {
+        exclude: /node_modules/,
+        test: /\.ts$/,
+        use: 'ts-loader',
+      },
+    ],
   },
   output: {
-    clean: true,
     filename: 'index.js',
     path: path.resolve(__dirname, 'dist'),
   },
+  plugins: [new ShebangPlugin()],
   resolve: {
-    extensions: ['.ts'],
+    extensions: ['.ts', '.js'],
   },
 };
