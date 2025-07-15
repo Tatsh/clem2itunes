@@ -43,7 +43,7 @@
     "@types/jest": "^30.0.0",
     "@types/node": "^24.0.13",
     "cspell": "^9.1.5",
-    "eslint": "^9.30.1",
+    "eslint": "^9.31.0",
     "jest": "^30.0.4",
     "jxa-types": "^0.0.6",
     "markdownlint-cli2": "^0.18.1",
