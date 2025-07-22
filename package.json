@@ -38,13 +38,13 @@
     "jxa-lib": "^0.1.7"
   },
   "devDependencies": {
-    "@eslint/js": "^9.30.1",
+    "@eslint/js": "^9.31.0",
     "@prettier/plugin-xml": "^3.4.2",
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.0.13",
-    "cspell": "^9.1.5",
+    "@types/node": "^24.1.0",
+    "cspell": "^9.2.0",
     "eslint": "^9.31.0",
-    "jest": "^30.0.4",
+    "jest": "^30.0.5",
     "jxa-types": "^0.0.6",
     "markdownlint-cli2": "^0.18.1",
     "prettier": "^3.6.2",
@@ -56,8 +56,8 @@
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.37.0",
-    "webpack": "^5.100.1",
+    "typescript-eslint": "^8.38.0",
+    "webpack": "^5.100.2",
     "webpack-cli": "^6.0.1",
     "webpack-shebang-plugin": "^1.1.8",
     "yarn-audit-fix": "^10.1.1"
