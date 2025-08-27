@@ -22,48 +22,10 @@ if TYPE_CHECKING:
 
 __all__ = ('atomic_parsley', 'can_read_file', 'create_library', 'get_db_file_path',
            'get_songs_from_db', 'has_cover', 'id3ted', 'is_mp3_stream_valid', 'mp3check', 'mp3splt',
-           'osascript', 'rsync', 'runner', 'setup_logging', 'setup_logging', 'split_cue', 'ssh',
-           'try_split_cue')
+           'osascript', 'rsync', 'runner', 'split_cue', 'ssh', 'try_split_cue')
 
 _FILE_URI_REGEX = re.compile(r'^file\://')
 log = logging.getLogger(__name__)
-
-
-def setup_logging(*,
-                  debug: bool = False,
-                  force_color: bool = False,
-                  no_color: bool = False) -> None:  # pragma: no cover
-    """Set up logging configuration."""
-    logging.config.dictConfig({
-        'version': 1,
-        'disable_existing_loggers': True,
-        'root': {
-            'handlers': ('console',),
-            'level': 'DEBUG' if debug else 'INFO',
-        },
-        'formatters': {
-            'default': {
-                '()': 'colorlog.ColoredFormatter',
-                'force_color': force_color,
-                'format':
-                    '%(log_color)s%(levelname)-8s%(reset)s | %(light_green)s%(name)s%(reset)s:'
-                    '%(light_red)s%(funcName)s%(reset)s:%(blue)s%(lineno)d%(reset)s - %(message)s',
-                'no_color': no_color,
-            },
-        },
-        'handlers': {
-            'console': {
-                'class': 'colorlog.StreamHandler',
-                'formatter': 'default',
-            },
-        },
-        'loggers': {
-            'clem2itunes': {
-                'handlers': ('console',),
-                'propagate': False,
-            },
-        },
-    })
 
 
 def runner(name: str,
@@ -251,15 +213,16 @@ async def has_cover(file: Path) -> bool:
             or (file.suffix == '.flac' and '"codec_name": "mjpeg"' in data))
 
 
-async def create_library(outdir_p: Path,
-                         split_dir: Path,
-                         database: Path | None = None,
-                         threshold: float = 0.6,
-                         max_size: int = 32,
-                         *,
-                         flac: bool = False,
-                         include_no_cover: bool = False,
-                         use_si: bool = True) -> None:
+async def create_library(  # noqa: PLR0913, PLR0915
+        outdir_p: Path,
+        split_dir: Path,
+        database: Path | None = None,
+        threshold: float = 0.6,
+        max_size: int = 32,
+        *,
+        flac: bool = False,
+        include_no_cover: bool = False,
+        use_si: bool = True) -> None:
     """
     Create a curated music library from a Strawberry or Clementine database.
 
