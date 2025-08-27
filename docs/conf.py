@@ -29,7 +29,7 @@ extensions = [
 ]
 extensions += ['sphinx_click']
 datatables_class = 'sphinx-datatable'
-datatables_options = {'paging': 0}
+datatables_options = {'paging': False}
 datatables_version = '1.13.4'
 html_theme = 'sphinx_immaterial'
 html_theme_options = {
@@ -76,6 +76,10 @@ html_theme_options = {
     'toc_title_is_page_title': True
 }
 intersphinx_mapping = {
+    'aiosqlite': ('https://aiosqlite.omnilib.dev/en/latest/', None),
     'anyio': ('https://anyio.readthedocs.io/en/stable/', None),
-    'python': ('https://docs.python.org/3', None)
+    'click': ('https://click.palletsprojects.com/en/latest/', None),
+    'platformdirs': ('https://platformdirs.readthedocs.io/en/latest/', None),
+    'python': ('https://docs.python.org/3', None),
+    'typing-extensions': ('https://typing-extensions.readthedocs.io/en/latest/', None)
 }

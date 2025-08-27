@@ -20,8 +20,8 @@
       "*.har",
       "*.lock",
       ".git/**",
-      ".vscode/extensions.json",
       ".yarn/**/*.cjs",
+      ".vscode/extensions.json",
       "dist/**",
       "man/**"
     ],
@@ -37,6 +37,7 @@
   "dependencies": {
     "jxa-lib": "^0.1.7"
   },
+  "description": "Crazy way to synchronise a remote Strawberry rated library to Music.app using Python, JXA and SSH.",
   "devDependencies": {
     "@eslint/js": "^9.34.0",
     "@prettier/plugin-xml": "^3.4.2",
@@ -62,6 +63,7 @@
     "webpack-shebang-plugin": "^1.1.8",
     "yarn-audit-fix": "^10.1.1"
   },
+  "files": ["LICENSE.txt", "README.md", "man/clem2itunes.1"],
   "homepage": "https://tatsh.github.io/clem2itunes/",
   "keywords": ["command line", "file management", "multimedia", "macos", "ssh", "strawberry"],
   "license": "MIT",
@@ -73,12 +75,13 @@
       "default": true,
       "line-length": {
         "code_blocks": false,
-        "line_length": 100
+        "line_length": 100,
+        "tables": false
       }
     }
   },
   "name": "clem2itunes",
-  "packageManager": "yarn@4.9.2",
+  "packageManager": "yarn@4.9.4",
   "prettier": {
     "endOfLine": "lf",
     "iniSpaceAroundEquals": true,
@@ -88,12 +91,6 @@
         "files": ["package.json"],
         "options": {
           "parser": "json"
-        }
-      },
-      {
-        "files": ["**/*.ts"],
-        "options": {
-          "parser": "typescript"
         }
       }
     ],

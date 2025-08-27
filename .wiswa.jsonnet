@@ -7,12 +7,17 @@
   version: '0.1.2',
   want_main: true,
   citation+: {
-    'date-released': '2025-05-09',
+    'date-released': '2025-08-27',
   },
+  security_policy_supported_versions: { '0.1.x': ':white_check_mark:' },
   docs_conf+: {
     config+: {
       intersphinx_mapping+: {
         anyio: ['https://anyio.readthedocs.io/en/stable/', null],
+        aiosqlite: ['https://aiosqlite.omnilib.dev/en/latest/', null],
+        click: ['https://click.palletsprojects.com/en/latest/', null],
+        platformdirs: ['https://platformdirs.readthedocs.io/en/latest/', null],
+        'typing-extensions': ['https://typing-extensions.readthedocs.io/en/latest/', null],
       },
     },
   },
@@ -39,6 +44,9 @@
         },
       },
     },
+  },
+  copilot: {
+    intro: 'clem2itunes is a command line tool to synchronise a remote Strawberry rated library to Music.app using Python, JXA and SSH.',
   },
   // Common
   authors: [
