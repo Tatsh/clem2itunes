@@ -35,6 +35,8 @@ homepage = "https://tatsh.github.io/clem2itunes/"
 repository = "https://github.com/Tatsh/clem2itunes"
 
 [tool.commitizen]
+name = "cz-path"
+remove_path_prefixes = ["include", "src", "clem2itunes"]
 tag_format = "v$version"
 version_files = [
   ".wiswa.jsonnet",
