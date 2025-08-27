@@ -22,6 +22,13 @@
 
 Crazy way to synchronise a remote Strawberry rated library with iTunes using Python, JXA and SSH.
 
+Requires the following packages on the source side:
+
+- [AtomicParsley](https://github.com/wez/atomicparsley)
+- [id3ted](https://github.com/xyb3rt/id3ted)
+- [mp3check](https://code.google.com/p/mp3check/)
+- [mp3splt](https://mp3splt.sourceforge.net)
+
 ## Installation
 
 ### Poetry

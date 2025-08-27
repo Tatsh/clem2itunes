@@ -77,6 +77,13 @@ clem2itunes
 
 Crazy way to synchronise a remote Strawberry rated library to Music.app using Python, JXA and SSH.
 
+Requires the following programs on the source side:
+
+- `AtomicParsley <https://github.com/wez/atomicparsley>`_
+- `id3ted <https://github.com/xyb3rt/id3ted>`_
+- `mp3check <https://code.google.com/p/mp3check/>`_
+- `mp3splt <https://mp3splt.sourceforge.net>`_
+
 Commands
 --------
 
