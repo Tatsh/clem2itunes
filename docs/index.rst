@@ -23,6 +23,10 @@ clem2itunes
       :target: https://github.com/Tatsh/clem2itunes/compare/v0.1.2...master
       :alt: GitHub commits since latest release
 
+   .. image:: https://github.com/Tatsh/clem2itunes/actions/workflows/codeql.yml/badge.svg
+      :target: https://github.com/Tatsh/clem2itunes/actions/workflows/codeql.yml
+      :alt: CodeQL
+
    .. image:: https://github.com/Tatsh/clem2itunes/actions/workflows/qa.yml/badge.svg
       :target: https://github.com/Tatsh/clem2itunes/actions/workflows/qa.yml
       :alt: QA
