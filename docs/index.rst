@@ -9,11 +9,11 @@ clem2itunes
 
    .. image:: https://img.shields.io/pypi/v/clem2itunes
       :target: https://pypi.org/project/clem2itunes/
-      :alt: PyPI - Version
+      :alt: PyPI Version
 
    .. image:: https://img.shields.io/github/v/tag/Tatsh/clem2itunes
       :target: https://github.com/Tatsh/clem2itunes/tags
-      :alt: GitHub tag
+      :alt: GitHub tag (with filter)
 
    .. image:: https://img.shields.io/github/license/Tatsh/clem2itunes
       :target: https://github.com/Tatsh/clem2itunes/blob/master/LICENSE.txt
@@ -21,7 +21,7 @@ clem2itunes
 
    .. image:: https://img.shields.io/github/commits-since/Tatsh/clem2itunes/v0.1.2/master
       :target: https://github.com/Tatsh/clem2itunes/compare/v0.1.2...master
-      :alt: GitHub commits since latest release
+      :alt: GitHub commits since latest release (by SemVer including pre-releases)
 
    .. image:: https://github.com/Tatsh/clem2itunes/actions/workflows/codeql.yml/badge.svg
       :target: https://github.com/Tatsh/clem2itunes/actions/workflows/codeql.yml
