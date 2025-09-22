@@ -213,16 +213,15 @@ async def has_cover(file: Path) -> bool:
             or (file.suffix == '.flac' and '"codec_name": "mjpeg"' in data))
 
 
-async def create_library(  # noqa: PLR0913, PLR0915
-        outdir_p: Path,
-        split_dir: Path,
-        database: Path | None = None,
-        threshold: float = 0.6,
-        max_size: int = 32,
-        *,
-        flac: bool = False,
-        include_no_cover: bool = False,
-        use_si: bool = True) -> None:
+async def create_library(outdir_p: Path,
+                         split_dir: Path,
+                         database: Path | None = None,
+                         threshold: float = 0.6,
+                         max_size: int = 32,
+                         *,
+                         flac: bool = False,
+                         include_no_cover: bool = False,
+                         use_si: bool = True) -> None:
     """
     Create a curated music library from a Strawberry or Clementine database.
 

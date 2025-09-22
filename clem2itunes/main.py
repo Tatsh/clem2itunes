@@ -63,18 +63,17 @@ def create_library(directory: Path,
                           use_si=not no_si))
 
 
-async def _do_sync(  # noqa: PLR0917
-        host: str,
-        local_dir: Path,
-        remote_create_lib: str,
-        remote_dir: str,
-        splitcue_cache_dir: str,
-        size_limit: int,
-        threshold: float,
-        user: str,
-        *,
-        include_no_cover: bool = False,
-        no_si: bool = False) -> None:
+async def _do_sync(host: str,
+                   local_dir: Path,
+                   remote_create_lib: str,
+                   remote_dir: str,
+                   splitcue_cache_dir: str,
+                   size_limit: int,
+                   threshold: float,
+                   user: str,
+                   *,
+                   include_no_cover: bool = False,
+                   no_si: bool = False) -> None:
     """Sync remote library to local machine."""
     include_no_cover_arg = ('include-no-cover',) if include_no_cover else ()
     no_si_arg = ('--no-si',) if no_si else ()
@@ -114,18 +113,17 @@ async def _do_sync(  # noqa: PLR0917
                     ' current username or the argument to --user).'))
 @click.option('-u', '--user', default=USER, help='Remote username.')
 @click.option('-t', '--threshold', default=0.8, help='Minimum rating out of 1.', type=float)
-def sync(  # noqa: PLR0917
-        host: str,
-        local_dir: Path,
-        remote_create_lib: str,
-        remote_dir: str,
-        splitcue_cache_dir: str,
-        size_limit: int = 32,
-        threshold: float = 0.8,
-        user: str = USER,
-        *,
-        include_no_cover: bool = False,
-        no_si: bool = True) -> None:
+def sync(host: str,
+         local_dir: Path,
+         remote_create_lib: str,
+         remote_dir: str,
+         splitcue_cache_dir: str,
+         size_limit: int = 32,
+         threshold: float = 0.8,
+         user: str = USER,
+         *,
+         include_no_cover: bool = False,
+         no_si: bool = True) -> None:
     """Sync remote library to local machine."""  # noqa: DOC501
     if not which('osascript'):
         log.error('This script must be run from macOS.')

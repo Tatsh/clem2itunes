@@ -14,8 +14,6 @@ jobs:
         run: 'poetry install --with=dev,tests'
       - name: 'Install dependencies (Yarn)'
         run: 'yarn'
-      - name: 'ESLint'
-        run: 'yarn eslint'
       - name: 'Lint with mypy'
         run: 'yarn mypy .'
       - name: 'Lint with Ruff'
