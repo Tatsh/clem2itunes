@@ -39,7 +39,7 @@
   },
   "description": "Crazy way to synchronise a remote Strawberry rated library to Music.app using Python, JXA and SSH.",
   "devDependencies": {
-    "@eslint/js": "^9.36.0",
+    "@eslint/js": "^9.37.0",
     "@prettier/plugin-xml": "^3.4.2",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.6.0",
