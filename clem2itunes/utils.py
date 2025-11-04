@@ -8,7 +8,6 @@ import asyncio.subprocess as asp
 import datetime
 import difflib
 import logging
-import logging.config
 import math
 import re
 import subprocess as sp
