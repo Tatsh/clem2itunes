@@ -86,7 +86,7 @@ jobs:
           dist_files=(dist/*)
           echo "Found ${#dist_files[@]} files in dist/: ${dist_files[*]##*/}"
           for file in "${dist_files[@]}"; do
-              if [[ "${file}" == index.js ]]; then
+              if [[ "${file}" == dist/index.js ]]; then
                   echo "Skipping index.js."
                   continue
               fi
