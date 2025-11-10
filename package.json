@@ -35,7 +35,7 @@
     "useGitignore": true
   },
   "dependencies": {
-    "jxa-lib": "^0.1.7"
+    "jxa-lib": "^0.1.8"
   },
   "description": "Crazy way to synchronise a remote Strawberry rated library to Music.app using Python, JXA and SSH.",
   "devDependencies": {
