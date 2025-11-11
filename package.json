@@ -35,16 +35,16 @@
     "useGitignore": true
   },
   "dependencies": {
-    "jxa-lib": "^0.1.8"
+    "jxa-lib": "^0.1.9"
   },
   "description": "Crazy way to synchronise a remote Strawberry rated library to Music.app using Python, JXA and SSH.",
   "devDependencies": {
-    "@eslint/js": "^9.39.0",
+    "@eslint/js": "^9.39.1",
     "@prettier/plugin-xml": "^3.4.2",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.10.0",
     "cspell": "^9.3.0",
-    "eslint": "^9.39.0",
+    "eslint": "^9.39.1",
     "jest": "^30.2.0",
     "jxa-types": "^0.0.6",
     "markdownlint-cli2": "^0.18.1",
@@ -81,7 +81,7 @@
     }
   },
   "name": "clem2itunes",
-  "packageManager": "yarn@4.10.3",
+  "packageManager": "yarn@4.11.0",
   "prettier": {
     "endOfLine": "lf",
     "iniSpaceAroundEquals": true,
