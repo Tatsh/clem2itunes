@@ -4,7 +4,7 @@
 [![PyPI - Version](https://img.shields.io/pypi/v/clem2itunes)](https://pypi.org/project/clem2itunes/)
 [![GitHub tag (with filter)](https://img.shields.io/github/v/tag/Tatsh/clem2itunes)](https://github.com/Tatsh/clem2itunes/tags)
 [![License](https://img.shields.io/github/license/Tatsh/clem2itunes)](https://github.com/Tatsh/clem2itunes/blob/master/LICENSE.txt)
-[![GitHub commits since latest release (by SemVer including pre-releases)](https://img.shields.io/github/commits-since/Tatsh/clem2itunes/v0.1.2/master)](https://github.com/Tatsh/clem2itunes/compare/v0.1.2...master)
+[![GitHub commits since latest release (by SemVer including pre-releases)](https://img.shields.io/github/commits-since/Tatsh/clem2itunes/v0.1.3/master)](https://github.com/Tatsh/clem2itunes/compare/v0.1.3...master)
 [![CodeQL](https://github.com/Tatsh/clem2itunes/actions/workflows/codeql.yml/badge.svg)](https://github.com/Tatsh/clem2itunes/actions/workflows/codeql.yml)
 [![QA](https://github.com/Tatsh/clem2itunes/actions/workflows/qa.yml/badge.svg)](https://github.com/Tatsh/clem2itunes/actions/workflows/qa.yml)
 [![Tests](https://github.com/Tatsh/clem2itunes/actions/workflows/tests.yml/badge.svg)](https://github.com/Tatsh/clem2itunes/actions/workflows/tests.yml)
