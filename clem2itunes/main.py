@@ -85,7 +85,7 @@ async def _do_sync(host: str,
     await rsync('--force', '--delete-before', 'rtdLqc', f'{user}@{host}:{remote_dir}/',
                 str(local_dir))
     with ir.as_file(ir.files('clem2itunes')) as p:
-        await osascript('-l', 'JavaScript', str(p / 'dist/index.js'))
+        await osascript('-l', 'JavaScript', str(p / 'index.js'))
 
 
 @click.command()

@@ -9,6 +9,12 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [unreleased]
 
+## [0.1.3]
+
+## Fixed
+
+- Package the JavaScript file.
+
 ## Changed
 
 - Now using _jxa-lib_ and _jxa-types_ in the TypeScript code.

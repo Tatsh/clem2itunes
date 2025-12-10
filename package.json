@@ -22,6 +22,7 @@
       ".git/**",
       ".yarn/**/*.cjs",
       ".vscode/extensions.json",
+      "clem2itunes/index.js",
       "dist/**",
       "man/**"
     ],
