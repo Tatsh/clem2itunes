@@ -53,6 +53,7 @@ lextudio
 libera
 libjsonnet
 linters
+manylinux
 memchr
 mjpeg
 modindex
