@@ -3,6 +3,8 @@ jobs:
     runs-on: ${{ matrix.system.image }}
     steps:
       - uses: 'actions/checkout@v6'
+      - name: 'Fix pyproject.toml for older Poetry'
+        run: python3 .github/scripts/fix_pyproject_for_poetry.py
       - name: 'Build Snap package'
         uses: 'snapcore/action-build@v1'
         id: build
