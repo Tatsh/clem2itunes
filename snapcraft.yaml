@@ -7,10 +7,7 @@ description: |
   Python, JXA and SSH.
 
   Requires the following packages on the source side:
-  - AtomicParsley
   - id3ted
-  - mp3check
-  - mp3splt
 
 grade: stable
 confinement: strict
