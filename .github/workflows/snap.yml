@@ -30,7 +30,6 @@ jobs:
             }
             { print }
           ' pyproject.toml > /tmp/pyproject.toml.new
-          
           mv /tmp/pyproject.toml.new pyproject.toml
       - name: 'Build Snap package'
         uses: 'snapcore/action-build@v1'
