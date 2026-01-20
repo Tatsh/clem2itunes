@@ -35,4 +35,7 @@ parts:
     poetry-with:
       - pip
     stage-packages:
+      - atomicparsley
+      - mp3check
+      - mp3splt
       - python3-venv
