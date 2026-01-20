@@ -7,6 +7,7 @@ appimage
 appinfo
 asyncio
 atexit
+atomicparsley
 atof
 atoi
 autodoc
@@ -95,6 +96,8 @@ sdist
 sema
 shellformat
 softprops
+snapcore
+snapcraft
 sphinxcontrib
 splitcue
 splitpoints
