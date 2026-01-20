@@ -5,7 +5,7 @@ jobs:
       - uses: 'actions/checkout@v6'
       - name: 'Fix pyproject.toml for older Poetry'
         run: |
-          pip install yq
+          pipx install yq
           name=$(tomlq -r '.project.name' pyproject.toml)
           version=$(tomlq -r '.project.version' pyproject.toml)
           description=$(tomlq -r '.project.description' pyproject.toml)
