@@ -7,6 +7,7 @@ jobs:
         uses: 'snapcore/action-build@v1'
         id: build
         with:
+          snapcraft-args: pack
           snapcraft-channel: 'latest/stable'
       - name: 'Upload Artifacts'
         uses: 'actions/upload-artifact@v6'
