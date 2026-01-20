@@ -36,6 +36,7 @@ name: 'Snap'
       - 'master'
     tags:
       - 'v*.*.*'
+  workflow_dispatch:
 permissions:
   attestations: 'write'
   contents: 'write'
