@@ -22,6 +22,7 @@ conftest
 coveragerc
 coverallsapp
 covr
+craftctl
 dataclasses
 datatable
 datatables

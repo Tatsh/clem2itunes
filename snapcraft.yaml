@@ -28,7 +28,13 @@ apps:
       - ssh-keys
 
 parts:
+  poetry-deps:
+    plugin: nil
+    override-build: |
+      craftctl default
+      pipx install poetry
   clem2itunes:
+    after: [poetry-deps]
     plugin: poetry
     source: .
     stage-packages:
