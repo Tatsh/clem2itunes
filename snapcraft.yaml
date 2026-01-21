@@ -32,7 +32,8 @@ parts:
     plugin: nil
     override-build: |
       craftctl default
-      pipx install poetry
+      curl -sSL https://install.python-poetry.org | POETRY_HOME=${CRAFT_PART_INSTALL} python3 -
+      ${CRAFT_PART_INSTALL}/bin/poetry self add poetry-plugin-export
   clem2itunes:
     after: [poetry-deps]
     plugin: poetry
