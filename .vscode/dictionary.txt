@@ -15,7 +15,6 @@ automodule
 bascom
 bsky
 clem
-codeowners
 colorlog
 commitizen
 conftest
@@ -41,7 +40,6 @@ fontawesome
 foxundermoon
 genindex
 getenv
-getline
 globaltoc
 gsbty
 htmlcov

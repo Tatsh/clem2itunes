@@ -85,7 +85,7 @@ include = ["man", { format = "sdist", path = "tests" }]
 
 [tool.poetry.dependencies]
 aiosqlite = "^0.22.1"
-anyio = "^4.12.0"
+anyio = "^4.12.1"
 bascom = "^0.1.2"
 click = "^8.3.1"
 click-aliases = "^1.0.5"
@@ -97,11 +97,11 @@ typing-extensions = "^4.15.0"
 optional = true
 
 [tool.poetry.group.dev.dependencies]
-commitizen = "^4.11.0"
+commitizen = "^4.12.1"
 cz-path = "^0.0.4"
 djlint = "^1.36.4"
 mypy = "^1.19.1"
-ruff = "^0.14.10"
+ruff = "^0.14.13"
 yapf = "^0.43.0"
 
 [tool.poetry.group.docs]
@@ -117,7 +117,7 @@ restructuredtext-lint = "^2.0.2"
 sphinx-click = "^6.2.0"
 sphinx-datatables = "^0.5.0"
 sphinx-immaterial = "^0.13.8"
-tomlkit = "^0.13.3"
+tomlkit = "^0.14.0"
 
 [tool.poetry.group.docs.dependencies.enum-tools]
 extras = ["sphinx"]
