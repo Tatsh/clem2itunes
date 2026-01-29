@@ -21,7 +21,6 @@ conftest
 coveragerc
 coverallsapp
 covr
-craftctl
 dataclasses
 datatable
 datatables
@@ -40,6 +39,7 @@ fontawesome
 foxundermoon
 genindex
 getenv
+getline
 globaltoc
 gsbty
 htmlcov
