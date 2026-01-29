@@ -74,5 +74,6 @@ local utils = import 'utils.libjsonnet';
         plugs+: ['ssh-keys'],
       },
     },
+    summary: 'Synchronise a remote Strawberry rated library to Music.app'
   },
 }

@@ -15,7 +15,7 @@ parts:
   clem2itunes:
     plugin: 'poetry'
     source: '.'
-    stage_packages:
+    stage-packages:
       - 'atomicparsley'
       - 'mp3check'
       - 'mp3splt'
@@ -24,5 +24,5 @@ platforms:
     build-on: 'amd64'
   arm64:
     build-on: 'arm64'
-summary: 'Crazy way to synchronise a remote Strawberry rated library to Music.app using Python, JXA and SSH.'
+summary: 'Synchronise a remote Strawberry rated library to Music.app'
 version: '0.1.3'
