@@ -87,7 +87,6 @@ pypa
 pypi
 pyproject
 pytest
-pythonpycacheprefix
 readlink
 regen
 rstcheck

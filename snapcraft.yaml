@@ -1,38 +1,28 @@
-name: clem2itunes
-base: core24
-version: '0.1.3'
-summary: Synchronise a remote Strawberry rated library to Music.app
-description: |
-  Crazy way to synchronise a remote Strawberry rated library with iTunes using
-  Python, JXA and SSH.
-
-  Requires the following packages on the source side:
-  - id3ted
-
-grade: stable
-confinement: strict
-
-platforms:
-  amd64:
-    build-on: amd64
-  arm64:
-    build-on: arm64
-
 apps:
   clem2itunes:
-    command: bin/clem2itunes
+    command: 'bin/clem2itunes'
     plugs:
-      - home
-      - network
-      - network-bind
-      - ssh-keys
-
+      - 'home'
+      - 'network'
+      - 'network-bind'
+      - 'ssh-keys'
+base: 'core24'
+confinement: 'strict'
+description: 'Crazy way to synchronise a remote Strawberry rated library to Music.app using Python, JXA and SSH.'
+grade: 'stable'
+name: 'clem2itunes'
 parts:
   clem2itunes:
-    plugin: poetry
-    source: .
-    stage-packages:
-      - atomicparsley
-      - mp3check
-      - mp3splt
-      - python3-venv
+    plugin: 'poetry'
+    source: '.'
+    stage_packages:
+      - 'atomicparsley'
+      - 'mp3check'
+      - 'mp3splt'
+platforms:
+  amd64:
+    build-on: 'amd64'
+  arm64:
+    build-on: 'arm64'
+summary: 'Crazy way to synchronise a remote Strawberry rated library to Music.app using Python, JXA and SSH.'
+version: '0.1.3'

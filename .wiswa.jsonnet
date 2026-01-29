@@ -67,4 +67,12 @@ local utils = import 'utils.libjsonnet';
   copilot+: {
     intro: 'clem2itunes is a command line tool to synchronise a remote Strawberry rated library to Music.app using Python, JXA and SSH.',
   },
+  snap_python_stage_packages+: ['atomicparsley', 'mp3check', 'mp3splt'],
+  snapcraft+: {
+    apps+: {
+      [top.project_name]+: {
+        plugs+: ['ssh-keys'],
+      },
+    },
+  },
 }

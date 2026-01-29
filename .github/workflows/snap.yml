@@ -1,6 +1,6 @@
 jobs:
   build:
-    runs-on: ${{ matrix.system.image }}
+    runs-on: '${{ matrix.system.image }}'
     steps:
       - uses: 'actions/checkout@v6'
       - name: 'Fix pyproject.toml for older Poetry'
@@ -31,23 +31,23 @@ jobs:
             { print }
           ' pyproject.toml > /tmp/pyproject.toml.new
           mv /tmp/pyproject.toml.new pyproject.toml
-      - name: 'Build Snap package'
+      - id: 'build'
+        name: 'Build Snap package'
         uses: 'snapcore/action-build@v1'
-        id: build
         with:
-          snapcraft-args: pack
+          snapcraft-args: 'pack'
           snapcraft-channel: 'latest/stable'
       - name: 'Upload Artifacts'
         uses: 'actions/upload-artifact@v6'
         with:
-          if-no-files-found: error
-          name: clem2itunes-snap-${{ matrix.system.arch }}
+          if-no-files-found: 'error'
+          name: 'clem2itunes-snap-${{ matrix.system.arch }}'
           path: '*.snap'
       - name: 'Attest'
         uses: 'actions/attest-build-provenance@v3'
         with:
           subject-path: '*.snap'
-      - if: github.ref_type == 'tag'
+      - if: "github.ref_type == 'tag'"
         name: 'Upload package'
         uses: 'softprops/action-gh-release@v2'
         with:
@@ -56,8 +56,10 @@ jobs:
     strategy:
       matrix:
         system:
-          - { arch: amd64, image: ubuntu-24.04 }
-          - { arch: arm64, image: ubuntu-24.04-arm }
+          - arch: 'amd64'
+            image: 'ubuntu-24.04'
+          - arch: 'arm64'
+            image: 'ubuntu-24.04-arm'
 name: 'Snap'
 'on':
   push:
@@ -65,7 +67,7 @@ name: 'Snap'
       - 'master'
     tags:
       - 'v*.*.*'
-  workflow_dispatch:
+  workflow_dispatch: null
 permissions:
   attestations: 'write'
   contents: 'write'
