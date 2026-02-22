@@ -39,15 +39,15 @@
   },
   "description": "Crazy way to synchronise a remote Strawberry rated library to Music.app using Python, JXA and SSH.",
   "devDependencies": {
-    "@eslint/js": "^9.39.2",
+    "@eslint/js": "^10.0.1",
     "@prettier/plugin-xml": "^3.4.2",
     "@types/jest": "^30.0.0",
-    "@types/node": "^25.2.2",
+    "@types/node": "^25.3.0",
     "cspell": "^9.6.4",
-    "eslint": "^10.0.0",
+    "eslint": "^10.0.1",
     "jest": "^30.2.0",
     "jxa-types": "^0.0.8",
-    "markdownlint-cli2": "^0.20.0",
+    "markdownlint-cli2": "^0.21.0",
     "prettier": "^3.8.1",
     "prettier-plugin-ini": "^1.3.0",
     "prettier-plugin-sort-json": "^4.2.0",
@@ -57,8 +57,8 @@
     "ts-loader": "^9.5.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.55.0",
-    "webpack": "^5.105.0",
+    "typescript-eslint": "^8.56.0",
+    "webpack": "^5.105.2",
     "webpack-cli": "^6.0.1",
     "webpack-shebang-plugin": "^1.1.8"
   },
@@ -80,7 +80,11 @@
         "line_length": 100,
         "tables": false
       }
-    }
+    },
+    "gitignore": true,
+    "globs": ["**/*.md", "**/*.mdc"],
+    "noBanner": true,
+    "showFound": true
   },
   "name": "clem2itunes",
   "packageManager": "yarn@4.12.0",
@@ -111,9 +115,9 @@
     "url": "git@github.com:Tatsh/clem2itunes.git"
   },
   "scripts": {
-    "check-formatting": "yarn prettier -c . && poetry run yapf -prd . && yarn markdownlint-cli2 '**/*.md' '#node_modules'",
+    "check-formatting": "yarn prettier -c . && poetry run yapf -prd . && yarn markdownlint-cli2",
     "check-spelling": "yarn cspell --no-progress './**/*'  './**/.*'",
-    "format": "prettier -w . && poetry run yapf -ri . && yarn markdownlint-cli2 --fix '**/*.md' '#node_modules'",
+    "format": "prettier -w . && poetry run yapf -ri . && yarn markdownlint-cli2 --fix",
     "gen-docs": "poetry run sphinx-build -T -E -b html -d docs/_build/doctrees -D language=en docs docs/_build/html",
     "gen-manpage": "poetry run sphinx-build -T -E -b man -d docs/_build/doctrees -D language=en docs man",
     "mypy": "poetry run mypy",
