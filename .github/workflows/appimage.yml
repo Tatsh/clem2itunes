@@ -97,14 +97,14 @@ jobs:
               "./${file}" --help
           done
       - name: 'Upload Artifacts'
-        uses: 'actions/upload-artifact@v6'
+        uses: 'actions/upload-artifact@v7'
         with:
           if-no-files-found: error
           name: clem2itunes-binaries-linux-${{ matrix.system.arch }}
           path: |
             dist/*
       - name: 'Attest'
-        uses: 'actions/attest-build-provenance@v3'
+        uses: 'actions/attest-build-provenance@v4'
         with:
           subject-path: 'dist/*.AppImage'
       - if: github.ref_type == 'tag'
