@@ -8,12 +8,19 @@ apps:
       - 'ssh-keys'
 base: 'core24'
 confinement: 'strict'
+contact: 'https://github.com/Tatsh/clem2itunes/issues'
 description: 'Crazy way to synchronise a remote Strawberry rated library to Music.app using Python, JXA and SSH.'
+donation: 'https://buymeacoffee.com/Tatsh'
 grade: 'stable'
+issues: 'https://github.com/Tatsh/clem2itunes/issues'
+license: 'MIT'
 name: 'clem2itunes'
 parts:
   clem2itunes:
-    plugin: 'poetry'
+    build-packages: []
+    plugin: 'python'
+    python-packages:
+      - '.'
     source: '.'
     stage-packages:
       - 'atomicparsley'
@@ -24,5 +31,8 @@ platforms:
     build-on: 'amd64'
   arm64:
     build-on: 'arm64'
+source-code: 'https://github.com/Tatsh/clem2itunes'
 summary: 'Synchronise a remote Strawberry rated library to Music.app'
+title: 'clem2itunes'
 version: '0.1.3'
+website: 'https://tatsh.github.io/clem2itunes/'
