@@ -54,7 +54,7 @@
     "prettier-plugin-toml": "^2.0.6",
     "pyright": "^1.1.408",
     "ts-jest": "^29.4.6",
-    "ts-loader": "^9.5.4",
+    "ts-loader": "^9.5.7",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.57.2",
