@@ -23,6 +23,7 @@ jobs:
         language:
           - 'python'
           - 'actions'
+          - 'javascript-typescript'
 name: 'CodeQL'
 'on':
   pull_request:
