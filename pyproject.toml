@@ -3,7 +3,7 @@ build-backend = "hatchling.build"
 requires = ["hatchling"]
 
 [dependency-groups]
-dev = ["commitizen>=4.13.9", "cz-path>=0.0.6", "mypy>=1.19.1", "ruff>=0.15.7", "yapf>=0.43.0"]
+dev = ["commitizen>=4.13.9", "cz-path>=0.0.6", "mypy>=1.19.1", "ruff>=0.15.8", "yapf>=0.43.0"]
 docs = [
   "autodoc-pydantic>=2.2.0",
   "doc8>=2.0.0",
@@ -41,7 +41,7 @@ classifiers = [
 ]
 dependencies = [
   "aiosqlite>=0.22.1",
-  "anyio>=4.12.1",
+  "anyio>=4.13.0",
   "bascom>=0.1.2",
   "click-aliases>=1.0.5",
   "click>=8.3.1",
@@ -122,7 +122,8 @@ reportMissingModuleSource = "error"
 reportPropertyTypeMismatch = "error"
 reportUnnecessaryTypeIgnoreComment = "none"
 typeCheckingMode = "off"
-useLibraryCodeForTypes = false
+venv = ".venv"
+venvPath = "."
 
 [tool.pytest.ini_options]
 mock_use_standalone_module = true
@@ -201,7 +202,8 @@ max-returns = 10
 max-statements = 100
 
 [tool.uv]
-default-groups = ["dev"]
+default-groups = "all"
+exclude-newer = "1 week"
 
 [tool.yapf]
 align_closing_bracket_with_visual_indent = true

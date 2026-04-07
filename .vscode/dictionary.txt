@@ -1,6 +1,7 @@
 addrandom
 aiosqlite
 anchore
+Ångström
 anyio
 apic
 appdir
@@ -17,9 +18,11 @@ bascom
 bsky
 cdrommsf
 clem
+codesign
 colorlog
 commitizen
 conftest
+cooldown
 coveragerc
 coverallsapp
 covr
@@ -31,8 +34,8 @@ datatables
 debugpy
 dispatchable
 docstrings
+doctree
 doctrees
-dorny
 dunder
 eeyore
 elif
@@ -41,7 +44,6 @@ esbonio
 excinfo
 ffprobe
 filevers
-fontawesome
 foxundermoon
 functools
 genindex
@@ -53,9 +55,11 @@ htmlcov
 intersphinx
 isort
 itertools
+jinja
 jsonnet
 jsonschema
 kwargs
+lastexitcode
 launchable
 lextudio
 libera
@@ -72,6 +76,8 @@ myproject
 mypy
 namedtuples
 norecursedirs
+notarytool
+npmjs
 nsascii
 nsfilemanager
 nspasteboard
@@ -97,6 +103,7 @@ pydantic
 pydocstyle
 pyinstaller
 pylint
+pylock
 pypa
 pypi
 pyproject
@@ -110,6 +117,7 @@ sema
 setattr
 shellcheck
 shellformat
+signtool
 snapcore
 snapcraft
 softprops
@@ -141,8 +149,9 @@ venv
 vers
 virtualenv
 wiswa
+wiswa's
+xcrun
 xfilter
 yapf
 yapfignore
 yarnrc
-ångström

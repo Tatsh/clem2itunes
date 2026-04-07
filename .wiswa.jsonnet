@@ -1,6 +1,7 @@
 local utils = import 'utils.libjsonnet';
 
 {
+  uses_user_defaults: true,
   local top = self,
   description: 'Crazy way to synchronise a remote Strawberry rated library to Music.app using Python, JXA and SSH.',
   keywords: ['command line', 'file management', 'multimedia', 'macos', 'ssh', 'strawberry'],
@@ -63,9 +64,6 @@ local utils = import 'utils.libjsonnet';
         },
       },
     },
-  },
-  copilot+: {
-    intro: 'clem2itunes is a command line tool to synchronise a remote Strawberry rated library to Music.app using Python, JXA and SSH.',
   },
   snap_python_stage_packages+: ['atomicparsley', 'mp3check', 'mp3splt'],
   snapcraft+: {
