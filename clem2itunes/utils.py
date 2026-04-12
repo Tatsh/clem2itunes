@@ -36,6 +36,24 @@ def runner(name: str,
     """
     Create a function to run a command with the given arguments.
 
+    Parameters
+    ----------
+    name : str
+        Executable name.
+    stderr : int | None
+        Subprocess stderr configuration.
+    stdout : int | None
+        Subprocess stdout configuration.
+    check : bool
+        Whether to raise on non-zero exit.
+    text : bool
+        Whether to decode output as text.
+
+    Returns
+    -------
+    Callable[..., Coroutine[Any, Any, asp.Process]]
+        Async wrapper that runs the command with the given arguments.
+
     Arguments are based on :py:func:`subprocess.run`.
     """
     async def cb(*args: str) -> asp.Process:
@@ -48,8 +66,9 @@ def runner(name: str,
             stderr_: str | bytes = await p.stderr.read() if p.stderr else b''
             stdout_: str | bytes = await p.stdout.read() if p.stdout else b''
             if text:
-                assert isinstance(stderr_, bytes)
-                assert isinstance(stdout_, bytes)
+                if not isinstance(stderr_, bytes) or not isinstance(stdout_, bytes):
+                    msg = 'expected bytes from subprocess streams when text=True'
+                    raise TypeError(msg)
                 try:
                     stderr_ = stderr_.decode()
                     stdout_ = stdout_.decode()
@@ -84,13 +103,43 @@ ssh = runner('ssh')
 
 
 async def get_db_file_path() -> Path:  # pragma: no cover
-    """Get the path to the Strawberry database file."""
+    """
+    Get the path to the Strawberry database file.
+
+    Returns
+    -------
+    Path
+        Resolved path to the database file.
+    """
     return await (Path(user_data_dir('strawberry')) / 'strawberry' /
                   'strawberry.db').resolve(strict=True)
 
 
 async def split_cue(temp_dir: Path, cue_file: Path, mp3_file: Path, track: int) -> Path:
-    """Split MP3 file using a CUE file."""
+    """
+    Split MP3 file using a CUE file.
+
+    Parameters
+    ----------
+    temp_dir : Path
+        Directory for split output.
+    cue_file : Path
+        Path to the CUE file.
+    mp3_file : Path
+        Source MP3 file.
+    track : int
+        Track index to extract.
+
+    Returns
+    -------
+    Path
+        Path to the split track MP3 file.
+
+    Raises
+    ------
+    RuntimeError
+        If ``mp3splt`` stdout was not piped.
+    """
     candidate = temp_dir / f'{mp3_file.stem}-{track:02d}.mp3'
     if await candidate.exists():
         log.debug('Found candidate `%s`.', candidate)
@@ -99,7 +148,9 @@ async def split_cue(temp_dir: Path, cue_file: Path, mp3_file: Path, track: int) 
     p = await mp3splt('-xKf', '-C', '8', '-T', '12', '-o'
                       f'{mp3_file.stem}-@n2', '-d', str(temp_dir), '-c', str(cue_file),
                       str(mp3_file))
-    assert p.stdout is not None
+    if p.stdout is None:
+        msg = 'mp3splt stdout was not piped'
+        raise RuntimeError(msg)
     log.debug('Output: %s', (await p.stdout.read()).strip())
     return candidate
 
@@ -133,7 +184,19 @@ async def get_songs_from_db(database: Path | None = None,
 
 
 async def can_read_file(file: Path) -> bool:
-    """Try to read a file."""
+    """
+    Try to read a file.
+
+    Parameters
+    ----------
+    file : Path
+        File to check.
+
+    Returns
+    -------
+    bool
+        True if the file can be opened for reading.
+    """
     try:
         async with await file.open('rb'):
             return True
@@ -142,7 +205,19 @@ async def can_read_file(file: Path) -> bool:
 
 
 async def is_mp3_stream_valid(file: Path) -> bool:
-    """Check if the MP3 stream is valid."""
+    """
+    Check if the MP3 stream is valid.
+
+    Parameters
+    ----------
+    file : Path
+        MP3 file to validate.
+
+    Returns
+    -------
+    bool
+        True if the stream is valid or only has a known benign issue.
+    """
     try:
         # Stream check, -TY may make this useless?
         await mp3check('-e', '-GSBTY', str(file))
@@ -155,6 +230,25 @@ async def try_split_cue(file: Path, split_dir: Path, track: int, artist: str,
                         title: str) -> Path | None:
     """
     Try to split a MP3 file using its associated CUE file.
+
+    Parameters
+    ----------
+    file : Path
+        MP3 file path.
+    split_dir : Path
+        Base directory for split output.
+    track : int
+        Track index.
+    artist : str
+        Artist name (for logging).
+    title : str
+        Track title (for logging).
+
+    Returns
+    -------
+    Path | None
+        Path to the split file, ``None`` if the CUE split points are invalid, or the original
+        ``file`` if no CUE exists.
 
     Raises
     ------
@@ -184,10 +278,22 @@ async def has_cover(file: Path) -> bool:
     """
     Check if a file has an embedded cover.
 
+    Parameters
+    ----------
+    file : Path
+        Audio file to inspect.
+
+    Returns
+    -------
+    bool
+        True if an embedded cover is present.
+
     Raises
     ------
     NotImplementedError
         If the file type is not supported.
+    RuntimeError
+        If command stdout was not piped.
     UnicodeDecodeError
         If tag output cannot be decoded as UTF-8.
     """
@@ -200,7 +306,9 @@ async def has_cover(file: Path) -> bool:
                                           '-show_streams', str(file))
     else:  # pragma: no cover
         raise NotImplementedError(str(file))
-    assert completed_process.stdout is not None
+    if completed_process.stdout is None:
+        msg = 'command stdout was not piped'
+        raise RuntimeError(msg)
     try:
         data = (await completed_process.stdout.read()).decode()
     except UnicodeDecodeError as e:
