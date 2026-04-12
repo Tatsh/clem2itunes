@@ -44,6 +44,7 @@ esbonio
 excinfo
 ffprobe
 filevers
+flathub
 foxundermoon
 functools
 genindex
