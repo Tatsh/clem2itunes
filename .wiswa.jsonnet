@@ -8,6 +8,8 @@ local utils = import 'utils.libjsonnet';
   project_name: 'clem2itunes',
   version: '0.1.3',
   want_main: true,
+  want_flatpak: true,
+  publishing+: { flathub: 'sh.tat.clem2itunes' },
   security_policy_supported_versions: { '0.1.x': ':white_check_mark:' },
   docs_conf+: {
     config+: {
