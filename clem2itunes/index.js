@@ -352,7 +352,7 @@
           const ret = [];
           for (const track of this._library.fileTracks()) {
             const name = track.name();
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             let loc;
             try {
               loc = track.location();

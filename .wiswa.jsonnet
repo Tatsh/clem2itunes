@@ -31,6 +31,7 @@ local utils = import 'utils.libjsonnet';
       '@types/jest': utils.latestNpmPackageVersionCaret('@types/jest'),
       '@types/node': utils.latestNpmPackageVersionCaret('@types/node'),
       eslint: utils.latestNpmPackageVersionCaret('eslint'),
+      globals: utils.latestNpmPackageVersionCaret('globals'),
       jest: utils.latestNpmPackageVersionCaret('jest'),
       'jxa-types': utils.latestNpmPackageVersionCaret('jxa-types'),
       'ts-jest': utils.latestNpmPackageVersionCaret('ts-jest'),
@@ -41,6 +42,9 @@ local utils = import 'utils.libjsonnet';
       webpack: utils.latestNpmPackageVersionCaret('webpack'),
       'webpack-cli': utils.latestNpmPackageVersionCaret('webpack-cli'),
       'webpack-shebang-plugin': utils.latestNpmPackageVersionCaret('webpack-shebang-plugin'),
+    },
+    scripts+: {
+      qa+: ' && eslint src',
     },
   },
   pyproject+: {
@@ -74,6 +78,11 @@ local utils = import 'utils.libjsonnet';
         plugs+: ['ssh-keys'],
       },
     },
-    summary: 'Synchronise a remote Strawberry rated library to Music.app'
+    summary: 'Synchronise a remote Strawberry rated library to Music.app',
+  },
+  github+: {
+    codeql+: {
+      languages+: ['javascript-typescript'],
+    },
   },
 }
