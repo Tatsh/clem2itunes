@@ -9,6 +9,9 @@ from clem2itunes.main import main
 import pytest
 
 if TYPE_CHECKING:
+    from collections.abc import Coroutine
+    from typing import Any
+
     from click.testing import CliRunner
     from pytest_mock import MockerFixture
 from clem2itunes.utils import (
@@ -37,7 +40,10 @@ def test_create_library_split_dir_same_as_output(mocker: MockerFixture, runner: 
 
 
 def test_create_library_from_main(mocker: MockerFixture, runner: CliRunner) -> None:
-    mock_asyncio_run = mocker.patch('clem2itunes.main.asyncio.run')
+    def asyncio_run_discard(unawaited: Coroutine[Any, Any, Any]) -> None:
+        unawaited.close()
+
+    mock_asyncio_run = mocker.patch('clem2itunes.main.asyncio.run', side_effect=asyncio_run_discard)
     mock_log_error = mocker.patch('clem2itunes.main.log.error')
     with runner.isolated_filesystem() as fake_root:
         fake_root_path = Path(fake_root)
@@ -114,6 +120,19 @@ async def test_runner_non_zero_return_not_text(mocker: MockerFixture) -> None:
 
 
 @pytest.mark.asyncio
+async def test_runner_non_zero_return_text_stream_not_bytes(mocker: MockerFixture) -> None:
+    mock_process = mocker.MagicMock()
+    mock_process.stderr.read = mocker.AsyncMock(return_value='not bytes')
+    mock_process.stdout.read = mocker.AsyncMock(return_value=b'')
+    mock_process.wait = mocker.AsyncMock()
+    mock_process.returncode = 1
+    mocker.patch('clem2itunes.utils.asp.create_subprocess_exec', return_value=mock_process)
+    tool = runner('tool')
+    with pytest.raises(TypeError, match='expected bytes from subprocess streams when text=True'):
+        await tool('arg')
+
+
+@pytest.mark.asyncio
 async def test_split_cue_candidate_exists(mocker: MockerFixture) -> None:
     mock_mp3splt = mocker.patch('clem2itunes.utils.mp3splt')
     mock_candidate = mocker.AsyncMock()
@@ -128,6 +147,9 @@ async def test_split_cue_candidate_exists(mocker: MockerFixture) -> None:
 @pytest.mark.asyncio
 async def test_split_cue(mocker: MockerFixture) -> None:
     mock_mp3splt = mocker.patch('clem2itunes.utils.mp3splt')
+    mock_mp3splt_process = mocker.MagicMock()
+    mock_mp3splt_process.stdout = mocker.MagicMock(read=mocker.AsyncMock(return_value=b''))
+    mock_mp3splt.return_value = mock_mp3splt_process
     mock_candidate = mocker.AsyncMock()
     mock_candidate.exists = mocker.AsyncMock(return_value=False)
     mock_cue = mocker.AsyncMock()
@@ -142,6 +164,24 @@ async def test_split_cue(mocker: MockerFixture) -> None:
     mock_mp3splt.assert_called_once_with('-xKf', '-C', '8', '-T', '12', '-otestfile.mp3-@n2', '-d',
                                          'temp_dir', '-c', 'testfile.cue', 'testfile.mp3')
     assert candidate == mock_candidate
+
+
+@pytest.mark.asyncio
+async def test_split_cue_stdout_not_piped(mocker: MockerFixture) -> None:
+    mock_mp3splt = mocker.patch('clem2itunes.utils.mp3splt')
+    mock_mp3splt.return_value = mocker.MagicMock(stdout=None)
+    mock_candidate = mocker.AsyncMock()
+    mock_candidate.exists = mocker.AsyncMock(return_value=False)
+    mock_cue = mocker.AsyncMock()
+    mock_cue.__str__.return_value = 'testfile.cue'
+    mock_mp3 = mocker.AsyncMock()
+    mock_mp3.__str__.return_value = 'testfile.mp3'
+    mock_mp3.stem = 'testfile.mp3'
+    temp_dir = mocker.AsyncMock()
+    temp_dir.__str__.return_value = 'temp_dir'
+    temp_dir.__truediv__.return_value = mock_candidate
+    with pytest.raises(RuntimeError, match='mp3splt stdout was not piped'):
+        await split_cue(temp_dir, mock_cue, mock_mp3, 1)
 
 
 @pytest.mark.asyncio
@@ -355,6 +395,17 @@ async def test_has_cover_decode_error(mocker: MockerFixture) -> None:
     with pytest.raises(UnicodeDecodeError):
         await has_cover(mock_file)
     mock_atomic.assert_called_once_with('testfile.m4a', '-t')
+
+
+@pytest.mark.asyncio
+async def test_has_cover_stdout_not_piped(mocker: MockerFixture) -> None:
+    mock_id3ted = mocker.patch('clem2itunes.utils.id3ted')
+    mock_id3ted.return_value = mocker.MagicMock(stdout=None)
+    mock_file = mocker.MagicMock()
+    mock_file.suffix = '.mp3'
+    mock_file.__str__.return_value = 'testfile.mp3'
+    with pytest.raises(RuntimeError, match='command stdout was not piped'):
+        await has_cover(mock_file)
 
 
 @pytest.mark.asyncio
