@@ -39,6 +39,7 @@ doctrees
 dunder
 eeyore
 elif
+esac
 esbenp
 esbonio
 excinfo
@@ -109,8 +110,10 @@ pypa
 pypi
 pyproject
 pytest
+pythonhosted
 readlink
 regen
+ripgreprc
 rstcheck
 schemafile
 sdcard
@@ -139,6 +142,7 @@ tomlkit
 tomllib
 tomlq
 tonumber
+tostring
 tryfirst
 ubyte
 udvare
