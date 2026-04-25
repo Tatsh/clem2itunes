@@ -151,7 +151,7 @@ def main(*, debug: bool = False) -> None:  # pragma: no cover
                       'clem2itunes': {
                           'handlers': ('console',),
                           'level': logging.DEBUG if debug else logging.INFO,
-                          'propagate': False,
+                          'propagate': False
                       }
                   })
 

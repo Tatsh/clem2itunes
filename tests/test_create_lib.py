@@ -204,21 +204,17 @@ async def test_get_songs_from_db(mocker: MockerFixture) -> None:
     mock_database = mocker.MagicMock()
     mock_database.__str__.return_value = 'test.db'
     mock_c = mocker.MagicMock()
-    mock_c.__aiter__.return_value = iter([
-        (0.6, 'artist', 'title', 'file:///filename', 1),
-        (0.7, 'artist2', 'title2', 'file:///filename2', 2),
-        (0.8, 'artist3', 'title3', 'file:///filename3', 3),
-    ])
+    mock_c.__aiter__.return_value = iter([(0.6, 'artist', 'title', 'file:///filename', 1),
+                                          (0.7, 'artist2', 'title2', 'file:///filename2', 2),
+                                          (0.8, 'artist3', 'title3', 'file:///filename3', 3)])
     mock_conn = mocker.MagicMock()
     mock_conn.execute.return_value.__aenter__.return_value = mock_c
     mock_aiosqlite_connect = mocker.patch('clem2itunes.utils.aiosqlite.connect')
     mock_aiosqlite_connect.return_value.__aenter__.return_value = mock_conn
     songs = [gen async for gen in get_songs_from_db(mock_database)]
-    assert songs == [
-        (0.6, 'artist', 'title', AnyioPath('/filename'), 1),
-        (0.7, 'artist2', 'title2', AnyioPath('/filename2'), 2),
-        (0.8, 'artist3', 'title3', AnyioPath('/filename3'), 3),
-    ]
+    assert songs == [(0.6, 'artist', 'title', AnyioPath('/filename'), 1),
+                     (0.7, 'artist2', 'title2', AnyioPath('/filename2'), 2),
+                     (0.8, 'artist3', 'title3', AnyioPath('/filename3'), 3)]
     mock_conn.execute.assert_called_once_with(
         ('SELECT rating, artist, title, filename, track FROM songs WHERE rating >= ? AND (filename '
          'LIKE "%.mp3" OR filename LIKE "%.m4a") ORDER BY rating ASC'), (0.6,))
@@ -229,21 +225,17 @@ async def test_get_songs_from_db_flac(mocker: MockerFixture) -> None:
     mock_database = mocker.MagicMock()
     mock_database.__str__.return_value = 'test.db'
     mock_c = mocker.MagicMock()
-    mock_c.__aiter__.return_value = iter([
-        (0.6, 'artist', 'title', 'file:///filename', 1),
-        (0.7, 'artist2', 'title2', 'file:///filename2', 2),
-        (0.8, 'artist3', 'title3', 'file:///filename3', 3),
-    ])
+    mock_c.__aiter__.return_value = iter([(0.6, 'artist', 'title', 'file:///filename', 1),
+                                          (0.7, 'artist2', 'title2', 'file:///filename2', 2),
+                                          (0.8, 'artist3', 'title3', 'file:///filename3', 3)])
     mock_conn = mocker.MagicMock()
     mock_conn.execute.return_value.__aenter__.return_value = mock_c
     mock_aiosqlite_connect = mocker.patch('clem2itunes.utils.aiosqlite.connect')
     mock_aiosqlite_connect.return_value.__aenter__.return_value = mock_conn
     songs = [gen async for gen in get_songs_from_db(mock_database, flac=True)]
-    assert songs == [
-        (0.6, 'artist', 'title', AnyioPath('/filename'), 1),
-        (0.7, 'artist2', 'title2', AnyioPath('/filename2'), 2),
-        (0.8, 'artist3', 'title3', AnyioPath('/filename3'), 3),
-    ]
+    assert songs == [(0.6, 'artist', 'title', AnyioPath('/filename'), 1),
+                     (0.7, 'artist2', 'title2', AnyioPath('/filename2'), 2),
+                     (0.8, 'artist3', 'title3', AnyioPath('/filename3'), 3)]
     mock_conn.execute.assert_called_once_with(
         ('SELECT rating, artist, title, filename, track FROM songs WHERE rating >= ? AND (filename '
          'LIKE "%.mp3" OR filename LIKE "%.m4a" OR filename LIKE "%.flac") ORDER BY rating ASC'),
@@ -439,7 +431,7 @@ async def test_create_library(mocker: MockerFixture) -> None:
         (0.6, 'Artist 3', 'Title', song4, 1),  # Skipped due unreadability
         (0.6, 'Artist 4', 'Title', song5, 1),  # Skipped due to no cover
         (0.6, 'Artist 6', 'Title', song7, 1),  # Skipped due to invalid CUE
-        (0.6, 'Artist 5', 'Title', song6, 1),  # Skipped due to size
+        (0.6, 'Artist 5', 'Title', song6, 1)  # Skipped due to size
     ])
     mocker.patch('clem2itunes.utils.get_songs_from_db', return_value=mock_c)
     mocker.patch('clem2itunes.utils.has_cover', side_effect=[True, True, False, True, True])
