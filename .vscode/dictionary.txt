@@ -87,7 +87,6 @@ nsurl
 nsutf
 nsworkspace
 numpy
-numpydoc
 onefile
 oneline
 osascript
