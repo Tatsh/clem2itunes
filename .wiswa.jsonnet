@@ -6,7 +6,7 @@ local utils = import 'utils.libjsonnet';
   description: 'Crazy way to synchronise a remote Strawberry rated library to Music.app using Python, JXA and SSH.',
   keywords: ['command line', 'file management', 'multimedia', 'macos', 'ssh', 'strawberry'],
   project_name: 'clem2itunes',
-  version: '0.1.3',
+  version: '0.1.4',
   want_main: true,
   want_flatpak: true,
   publishing+: { flathub: 'sh.tat.clem2itunes' },
