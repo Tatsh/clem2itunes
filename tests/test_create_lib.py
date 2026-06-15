@@ -188,10 +188,14 @@ async def test_split_cue_stdout_not_piped(mocker: MockerFixture) -> None:
 async def test_get_songs_from_db_empty_db(mocker: MockerFixture) -> None:
     mock_database = mocker.MagicMock()
     mock_database.__str__.return_value = 'test.db'
+    mock_c = mocker.MagicMock()
+    mock_c.__aiter__.return_value = iter([])
     mock_conn = mocker.MagicMock()
-    mock_conn.execute.return_value.__aenter__.return_value = mocker.MagicMock()
-    mock_aiosqlite_connect = mocker.patch('clem2itunes.utils.aiosqlite.connect')
-    mock_aiosqlite_connect.return_value.__aenter__.return_value = mock_conn
+    mock_conn.execute = mocker.AsyncMock(return_value=mock_c)
+    mock_conn.close = mocker.AsyncMock()
+    mocker.patch('clem2itunes.utils.aiosqlite.connect',
+                 new_callable=mocker.AsyncMock,
+                 return_value=mock_conn)
     songs = [gen async for gen in get_songs_from_db(mock_database, 0.4)]
     assert songs == []
     mock_conn.execute.assert_called_once_with(
@@ -208,9 +212,11 @@ async def test_get_songs_from_db(mocker: MockerFixture) -> None:
                                           (0.7, 'artist2', 'title2', 'file:///filename2', 2),
                                           (0.8, 'artist3', 'title3', 'file:///filename3', 3)])
     mock_conn = mocker.MagicMock()
-    mock_conn.execute.return_value.__aenter__.return_value = mock_c
-    mock_aiosqlite_connect = mocker.patch('clem2itunes.utils.aiosqlite.connect')
-    mock_aiosqlite_connect.return_value.__aenter__.return_value = mock_conn
+    mock_conn.execute = mocker.AsyncMock(return_value=mock_c)
+    mock_conn.close = mocker.AsyncMock()
+    mocker.patch('clem2itunes.utils.aiosqlite.connect',
+                 new_callable=mocker.AsyncMock,
+                 return_value=mock_conn)
     songs = [gen async for gen in get_songs_from_db(mock_database)]
     assert songs == [(0.6, 'artist', 'title', AnyioPath('/filename'), 1),
                      (0.7, 'artist2', 'title2', AnyioPath('/filename2'), 2),
@@ -229,9 +235,11 @@ async def test_get_songs_from_db_flac(mocker: MockerFixture) -> None:
                                           (0.7, 'artist2', 'title2', 'file:///filename2', 2),
                                           (0.8, 'artist3', 'title3', 'file:///filename3', 3)])
     mock_conn = mocker.MagicMock()
-    mock_conn.execute.return_value.__aenter__.return_value = mock_c
-    mock_aiosqlite_connect = mocker.patch('clem2itunes.utils.aiosqlite.connect')
-    mock_aiosqlite_connect.return_value.__aenter__.return_value = mock_conn
+    mock_conn.execute = mocker.AsyncMock(return_value=mock_c)
+    mock_conn.close = mocker.AsyncMock()
+    mocker.patch('clem2itunes.utils.aiosqlite.connect',
+                 new_callable=mocker.AsyncMock,
+                 return_value=mock_conn)
     songs = [gen async for gen in get_songs_from_db(mock_database, flac=True)]
     assert songs == [(0.6, 'artist', 'title', AnyioPath('/filename'), 1),
                      (0.7, 'artist2', 'title2', AnyioPath('/filename2'), 2),

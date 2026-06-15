@@ -178,9 +178,12 @@ async def get_songs_from_db(database: Path | None = None,
         f'rating >= ? AND ({like_column} LIKE "%.mp3" OR {like_column} LIKE "%.m4a"{flac_part}) '
         'ORDER BY rating ASC')
     log.debug('Query: %s', query)
-    async with aiosqlite.connect(str(database)) as conn, conn.execute(query, (threshold,)) as c:
-        async for rating, artist, title, uri, track in c:
+    conn = await aiosqlite.connect(str(database))
+    try:
+        async for rating, artist, title, uri, track in await conn.execute(query, (threshold,)):
             yield rating, artist, title, Path(re.sub(_FILE_URI_REGEX, '', uri)), track
+    finally:
+        await conn.close()
 
 
 async def can_read_file(file: Path) -> bool:
