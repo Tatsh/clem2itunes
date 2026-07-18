@@ -474,14 +474,14 @@ wheels = [
 
 [[package]]
 name = "click-aliases"
-version = "1.0.6"
+version = "1.0.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/67/43/fc99880a8cba558ab26cb87f0a317c09f870d4b49275207bd5824e4380dc/click_aliases-1.0.6.tar.gz", hash = "sha256:9372e58d00aa146f0d235e4e5e8bd280e84fe78e52db5fd80eacb14ecdf2e0d4", size = 2972, upload-time = "2026-05-15T14:54:20.719Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/02/62/a67da6b561fad10792635cf504080f3d98b655683c4801570b22f95f3476/click_aliases-1.0.7.tar.gz", hash = "sha256:507d6a6cf9001bf8838fe7f58a37651a25cbc5cc25421c5aeab6727a9397f7b5", size = 3062, upload-time = "2026-07-09T16:58:36.498Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a5/34/67b8cd38f683233191da35d2460e0f6c1475fd9e4d0f4f9299a30a4f5aa4/click_aliases-1.0.6-py3-none-any.whl", hash = "sha256:fc4e047de3d950d9b575c5928010308b733b85baa76240ff7448b81e5d7c290d", size = 3585, upload-time = "2026-05-15T14:54:19.604Z" },
+    { url = "https://files.pythonhosted.org/packages/87/27/83b5403ab6cfa9ee78e0251308e614df8536679348771575fcdb0e00db4a/click_aliases-1.0.7-py3-none-any.whl", hash = "sha256:f3dc828dbc76de4b6a7262a02049ad00e0107648f3a058df728d966e3fecd464", size = 3661, upload-time = "2026-07-09T16:58:35.675Z" },
 ]
 
 [[package]]
