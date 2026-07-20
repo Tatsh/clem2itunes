@@ -48,7 +48,7 @@ def create_library(directory: Path,
                    flac: bool = False,
                    include_no_cover: bool = False,
                    no_si: bool = True) -> None:
-    """Create a curated music library from a Strawberry or Clementine database."""  # noqa: DOC501
+    """Create a curated music library from a Strawberry or Clementine database."""  # ruff:ignore[docstring-missing-exception]
     if directory == split_dir:
         log.error('Split CUE cache directory cannot be same as output directory.')
         raise click.Abort
@@ -124,7 +124,7 @@ def sync(host: str,
          *,
          include_no_cover: bool = False,
          no_si: bool = True) -> None:
-    """Sync remote library to local machine."""  # noqa: DOC501
+    """Sync remote library to local machine."""  # ruff:ignore[docstring-missing-exception]
     if not which('osascript'):
         log.error('This script must be run from macOS.')
         raise click.Abort
