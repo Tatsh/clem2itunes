@@ -174,7 +174,7 @@ async def get_songs_from_db(database: Path | None = None,
     like_column = 'filename' if is_clementine else 'url'
     flac_part = f' OR {like_column} LIKE "%.flac"' if flac else ''
     query = (
-        f'SELECT rating, artist, title, {filename_column}, track FROM songs WHERE '  # noqa: S608
+        f'SELECT rating, artist, title, {filename_column}, track FROM songs WHERE '  # ruff:ignore[hardcoded-sql-expression]
         f'rating >= ? AND ({like_column} LIKE "%.mp3" OR {like_column} LIKE "%.m4a"{flac_part}) '
         'ORDER BY rating ASC')
     log.debug('Query: %s', query)
@@ -257,7 +257,7 @@ async def try_split_cue(file: Path, split_dir: Path, track: int, artist: str,
     ------
     sp.CalledProcessError
         If the CUE file cannot be processed.
-    """  # noqa: DOC502,DOC501
+    """  # ruff:ignore[docstring-extraneous-exception, docstring-missing-exception]
     cue_file = file.with_suffix('.cue')
     if await cue_file.exists():
         tempdir = split_dir / file.parent.name
@@ -395,7 +395,7 @@ async def create_library(outdir_p: Path,
         if not actual_file:
             log.warning('File `%s` has an invalid CUE file. Not including.', file)
             continue
-        file = actual_file  # noqa: PLW2901
+        file = actual_file  # ruff:ignore[redefined-loop-name]
         filesize = (await file.stat()).st_size
         if total_size + filesize > max_size:
             log.info('Hit limit for maximum total size of data.')

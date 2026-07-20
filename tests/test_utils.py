@@ -29,7 +29,7 @@ async def test_do_create_library_stream_fail(mocker: MockerFixture, runner: CliR
     outdir_p.mkdir = mocker.AsyncMock()
     outdir_p.__truediv__.return_value = fake_file
 
-    async def async_iter(  # noqa: RUF029
+    async def async_iter(  # ruff:ignore[unused-async]
             *args: Any, **kwargs: Any) -> AsyncIterator[tuple[float, str, str, Path, int]]:
         yield (0.8, 'Artist', 'Title', fake_file, 1)
 
