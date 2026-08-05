@@ -1186,12 +1186,10 @@
           case 'Boolean':
           case 'Number':
           case 'String':
-            if (
-              !(
-                typeof a === typeof b &&
-                (0, _objectIs_js__WEBPACK_IMPORTED_MODULE_2__['default'])(a.valueOf(), b.valueOf())
-              )
-            ) {
+            if (!(
+              typeof a === typeof b &&
+              (0, _objectIs_js__WEBPACK_IMPORTED_MODULE_2__['default'])(a.valueOf(), b.valueOf())
+            )) {
               return false;
             }
             break;
@@ -1205,16 +1203,14 @@
           case 'Error':
             return a.name === b.name && a.message === b.message;
           case 'RegExp':
-            if (
-              !(
-                a.source === b.source &&
-                a.global === b.global &&
-                a.ignoreCase === b.ignoreCase &&
-                a.multiline === b.multiline &&
-                a.sticky === b.sticky &&
-                a.unicode === b.unicode
-              )
-            ) {
+            if (!(
+              a.source === b.source &&
+              a.global === b.global &&
+              a.ignoreCase === b.ignoreCase &&
+              a.multiline === b.multiline &&
+              a.sticky === b.sticky &&
+              a.unicode === b.unicode
+            )) {
               return false;
             }
             break;
@@ -1280,12 +1276,10 @@
         idx = keysA.length - 1;
         while (idx >= 0) {
           var key = keysA[idx];
-          if (
-            !(
-              (0, _has_js__WEBPACK_IMPORTED_MODULE_6__['default'])(key, b) &&
-              _equals(b[key], a[key], extendedStackA, extendedStackB)
-            )
-          ) {
+          if (!(
+            (0, _has_js__WEBPACK_IMPORTED_MODULE_6__['default'])(key, b) &&
+            _equals(b[key], a[key], extendedStackA, extendedStackB)
+          )) {
             return false;
           }
           idx -= 1;

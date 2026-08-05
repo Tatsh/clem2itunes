@@ -37,7 +37,11 @@ local utils = import 'utils.libjsonnet';
       'ts-jest': utils.latestNpmPackageVersionCaret('ts-jest'),
       'ts-loader': utils.latestNpmPackageVersionCaret('ts-loader'),
       'ts-node': utils.latestNpmPackageVersionCaret('ts-node'),
-      typescript: utils.latestNpmPackageVersionCaret('typescript'),
+      // typescript-eslint cannot load the TypeScript 7 API yet, so `typescript` is aliased to the
+      // 6.x compatibility package. Revert to utils.latestNpmPackageVersionCaret('typescript') once
+      // https://github.com/typescript-eslint/typescript-eslint/issues/10940 is resolved.
+      typescript: 'npm:@typescript/typescript6@' +
+                  utils.latestNpmPackageVersionCaret('@typescript/typescript6'),
       'typescript-eslint': utils.latestNpmPackageVersionCaret('@typescript-eslint/eslint-plugin'),
       webpack: utils.latestNpmPackageVersionCaret('webpack'),
       'webpack-cli': utils.latestNpmPackageVersionCaret('webpack-cli'),

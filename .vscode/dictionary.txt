@@ -52,6 +52,7 @@ genindex
 getenv
 globaltoc
 gsbty
+handoff
 hoverxref
 htmlcov
 intersphinx
@@ -79,7 +80,6 @@ mypy
 namedtuples
 norecursedirs
 notarytool
-npmjs
 nsascii
 nsfilemanager
 nspasteboard
@@ -96,6 +96,7 @@ pavelzw
 pipx
 platformdirs
 plistlib
+preapproved
 pred
 prodvers
 putenv
@@ -124,13 +125,13 @@ shellformat
 signtool
 snapcore
 snapcraft
-softprops
 soupsieve
 sphinxcontrib
 splitcue
 splitpoints
 splt
 srand
+statusline
 strtod
 strtof
 strtold
@@ -145,6 +146,8 @@ tostring
 tryfirst
 ubyte
 udvare
+undraft
+undrafted
 uniques
 unistd
 unsetenv
@@ -153,10 +156,13 @@ vendored
 venv
 vers
 virtualenv
+winget
 wiswa
 wiswa's
+worktree
 xcrun
 xfilter
 yapf
 yapfignore
 yarnrc
+zizmor
