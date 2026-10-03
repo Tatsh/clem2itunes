@@ -5,8 +5,9 @@ from typing import TYPE_CHECKING
 import subprocess as sp
 
 from anyio import Path as AnyioPath
-from clem2itunes.main import main
 import pytest
+
+from clem2itunes.main import main
 
 if TYPE_CHECKING:
     from collections.abc import Coroutine

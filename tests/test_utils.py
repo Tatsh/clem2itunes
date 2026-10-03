@@ -3,8 +3,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from anyio import Path
-from clem2itunes.utils import create_library
 import pytest
+
+from clem2itunes.utils import create_library
 
 if TYPE_CHECKING:
     from collections.abc import AsyncIterator
