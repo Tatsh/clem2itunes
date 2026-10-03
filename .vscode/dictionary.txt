@@ -1,7 +1,6 @@
 addrandom
 aiosqlite
 anchore
-Ångström
 anyio
 apic
 appdir
@@ -14,6 +13,7 @@ atoi
 atomicparsley
 autodoc
 automodule
+autouse
 bascom
 bsky
 cdrommsf
@@ -22,7 +22,6 @@ codesign
 colorlog
 commitizen
 conftest
-cooldown
 coveragerc
 coverallsapp
 covr
@@ -39,6 +38,7 @@ doctrees
 dunder
 eeyore
 elif
+endswith
 esac
 esbenp
 esbonio
@@ -78,6 +78,8 @@ monkeypatch
 myproject
 mypy
 namedtuples
+noone
+noqa
 norecursedirs
 notarytool
 nsascii
@@ -86,7 +88,9 @@ nspasteboard
 nsurl
 nsutf
 nsworkspace
+nullglob
 numpy
+numpydoc
 onefile
 oneline
 osascript
@@ -96,6 +100,7 @@ pavelzw
 pipx
 platformdirs
 plistlib
+popen
 preapproved
 pred
 prodvers
@@ -115,6 +120,7 @@ readlink
 regen
 ripgreprc
 rstcheck
+sbclaude
 schemafile
 sdcard
 sdist
@@ -122,6 +128,7 @@ sema
 setattr
 shellcheck
 shellformat
+shopt
 signtool
 snapcore
 snapcraft
@@ -159,10 +166,10 @@ virtualenv
 winget
 wiswa
 wiswa's
-worktree
 xcrun
 xfilter
 yapf
 yapfignore
 yarnrc
 zizmor
+Ångström
