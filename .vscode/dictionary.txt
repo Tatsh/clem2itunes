@@ -145,7 +145,6 @@ strtold
 syft
 tatsh
 testpaths
-tomlkit
 tomllib
 tomlq
 tonumber
