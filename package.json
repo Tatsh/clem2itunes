@@ -49,7 +49,7 @@
     "@prettier/plugin-xml": "^3.4.2",
     "@types/jest": "^30.0.0",
     "@types/node": "^26.6.3",
-    "cspell": "^10.3.4",
+    "cspell": "^10.3.5",
     "eslint": "^10.11.0",
     "globals": "^17.12.0",
     "jest": "^30.5.2",
