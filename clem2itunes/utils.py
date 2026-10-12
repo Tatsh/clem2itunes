@@ -4,7 +4,7 @@ from __future__ import annotations
 from shlex import quote
 from typing import TYPE_CHECKING, Any
 import asyncio.subprocess as asp
-import datetime
+import datetime as dt
 import difflib
 import logging
 import math
@@ -425,7 +425,7 @@ async def create_library(outdir_p: Path,
             await out.unlink()
         await out.symlink_to(fn)
     async with await (outdir_p / '.timestamp').open('w') as ft:
-        await ft.write(f'{datetime.datetime.now(tz=datetime.UTC)}\n')
+        await ft.write(f'{dt.datetime.now(tz=dt.UTC)}\n')
     async with await (outdir_p / '.ratings').open('w') as ft:
         for rating, rated_file in ratings:
             await ft.write(f'{rating} {rated_file.name}\n')
