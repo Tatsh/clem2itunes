@@ -67,6 +67,7 @@ launchable
 lextudio
 libera
 libjsonnet
+librsvg
 libsonnet
 linters
 manylinux
@@ -120,6 +121,7 @@ readlink
 regen
 ripgreprc
 rstcheck
+rsvg
 sbclaude
 schemafile
 sdcard
