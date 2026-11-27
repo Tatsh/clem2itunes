@@ -21,7 +21,8 @@ parts:
     plugin: 'python'
     python-packages:
       - '.'
-    source: '.'
+    source: 'https://github.com/Tatsh/clem2itunes.git'
+    source-tag: 'v0.1.4'
     stage-packages:
       - 'atomicparsley'
       - 'mp3check'
